@@ -1,61 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://i.imgur.com/Np2FqhJ.png" width="300" alt="Web Inventaris Logo">
 </p>
 
-## About Laravel
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/status-development-blue" alt="Development Status"></a>
+  <a href="#"><img src="https://img.shields.io/github/issues/JustThiriq/web-inventaris" alt="Open Issues"></a>
+  <a href="#"><img src="https://img.shields.io/github/license/JustThiriq/web-inventaris" alt="License"></a>
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# Web Inventaris 🧾
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Aplikasi web untuk manajemen inventaris barang, pendataan stok masuk/keluar, laporan, dan pengingat restock.
 
-## Learning Laravel
+## 📖 Daftar Isi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* [Tentang](#tentang)
+* [Fitur](#fitur)
+* [Demo](#demo)
+* [Instalasi](#instalasi)
+* [Penggunaan](#penggunaan)
+* [Arsitektur & Teknologi](#arsitektur--teknologi)
+* [Kontribusi](#kontribusi)
+* [Lisensi](#lisensi)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tentang
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Aplikasi ini ditujukan untuk membantu pengelolaan inventaris barang dengan fitur pencatatan barang masuk, keluar, pelaporan, dan peringatan jika stok mulai menipis.
 
-## Laravel Sponsors
+## Fitur
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* CRUD data barang
+* Pencatatan stok masuk dan keluar
+* Laporan stok harian, mingguan, bulanan
+* Peringatan saat stok minimum tercapai
+* (Opsional) Autentikasi pengguna dan peran admin/user
 
-### Premium Partners
+## Demo
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+(Screenshots atau link demo online bisa ditambahkan di sini)
 
-## Contributing
+## Instalasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Langkah-langkah untuk menjalankan project secara lokal:
 
-## Code of Conduct
+```bash
+git clone https://github.com/JustThiriq/web-inventaris.git
+cd web-inventaris
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Jika menggunakan Node.js
+npm install
+npm run migrate     # Jika menggunakan migrasi database
+npm run seed        # Jika ada data dummy
+npm start           # Atau npm run dev
+```
 
-## Security Vulnerabilities
+Jika menggunakan Docker:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker-compose up --build
+```
 
-## License
+## Penggunaan
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Akses aplikasi melalui [http://localhost:3000](http://localhost:3000)
+2. Login sebagai admin atau user
+3. Tambahkan data barang
+4. Catat barang masuk/keluar
+5. Lihat laporan dan notifikasi stok minimum
+
+## Arsitektur & Teknologi
+
+* **Frontend**: HTML, CSS, JavaScript (bisa ditambahkan framework jika ada)
+* **Backend**: Node.js + Express (atau PHP/Laravel)
+* **Database**: MySQL / SQLite
+* **Tools**: (Tambahkan seperti Docker, Postman, dsb. jika digunakan)
+
+## Kontribusi
+
+Kontributor sangat diterima. Cara berkontribusi:
+
+1. Fork repository ini
+2. Buat branch baru: `feat/nama-fitur`
+3. Commit perubahan
+4. Push ke repo Anda
+5. Buat Pull Request
+
+## Lisensi
+
+MIT License © 2025 JustThiriq
+
+---
+
+Dibuat oleh [JustThiriq](https://github.com/JustThiriq) dan [iminervaa69](https://github.com/iminervaa69) – feel free to connect!
