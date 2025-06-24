@@ -3,16 +3,16 @@
 </p>
 
 <p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/status-development-blue" alt="Development Status"></a>
-  <a href="#"><img src="https://img.shields.io/github/issues/JustThiriq/web-inventaris" alt="Open Issues"></a>
-  <a href="#"><img src="https://img.shields.io/github/license/JustThiriq/web-inventaris" alt="License"></a>
+  <a href="#"><img src="https://img.shields.io/badge/status-in%20progress-yellow" alt="Project Status"></a>
+  <a href="https://github.com/JustThiriq/web-inventaris/issues"><img src="https://img.shields.io/github/issues/JustThiriq/web-inventaris" alt="Open Issues"></a>
+  <a href="https://github.com/JustThiriq/web-inventaris/blob/main/LICENSE"><img src="https://img.shields.io/github/license/JustThiriq/web-inventaris" alt="License"></a>
 </p>
 
 ---
 
 # Web Inventaris 🧾
 
-Aplikasi web untuk manajemen inventaris barang, pendataan stok masuk/keluar, laporan, dan pengingat restock.
+Aplikasi web berbasis Laravel 11 untuk manajemen inventaris barang, pendataan stok masuk/keluar, pelaporan, dan pengingat restock. Proyek ini saat ini sedang dalam tahap pengembangan dan menggunakan template AdminLTE untuk halaman dashboard.
 
 ## 📖 Daftar Isi
 
@@ -27,7 +27,7 @@ Aplikasi web untuk manajemen inventaris barang, pendataan stok masuk/keluar, lap
 
 ## Tentang
 
-Aplikasi ini ditujukan untuk membantu pengelolaan inventaris barang dengan fitur pencatatan barang masuk, keluar, pelaporan, dan peringatan jika stok mulai menipis.
+Web Inventaris adalah aplikasi manajemen stok barang berbasis Laravel 11. Fokus utama aplikasi ini adalah membantu pengguna mencatat barang masuk dan keluar, mengelola stok, serta menghasilkan laporan yang relevan. Saat ini, pengembangan masih berada pada tahap integrasi template AdminLTE pada halaman dashboard.
 
 ## Fitur
 
@@ -35,11 +35,11 @@ Aplikasi ini ditujukan untuk membantu pengelolaan inventaris barang dengan fitur
 * Pencatatan stok masuk dan keluar
 * Laporan stok harian, mingguan, bulanan
 * Peringatan saat stok minimum tercapai
-* (Opsional) Autentikasi pengguna dan peran admin/user
+* Autentikasi pengguna dan peran admin/user (dalam pengembangan)
 
 ## Demo
 
-(Screenshots atau link demo online bisa ditambahkan di sini)
+Belum tersedia. Fitur demo akan ditambahkan setelah pengembangan UI utama selesai.
 
 ## Instalasi
 
@@ -49,33 +49,30 @@ Langkah-langkah untuk menjalankan project secara lokal:
 git clone https://github.com/JustThiriq/web-inventaris.git
 cd web-inventaris
 
-# Jika menggunakan Node.js
-npm install
-npm run migrate     # Jika menggunakan migrasi database
-npm run seed        # Jika ada data dummy
-npm start           # Atau npm run dev
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
 ```
 
-Jika menggunakan Docker:
-
-```bash
-docker-compose up --build
-```
+> Pastikan Anda sudah memiliki database MySQL dan Laravel 11 terinstal dengan PHP >= 8.2.
 
 ## Penggunaan
 
-1. Akses aplikasi melalui [http://localhost:3000](http://localhost:3000)
-2. Login sebagai admin atau user
-3. Tambahkan data barang
-4. Catat barang masuk/keluar
-5. Lihat laporan dan notifikasi stok minimum
+1. Akses aplikasi melalui `http://localhost:8000`
+2. Login (jika fitur autentikasi sudah tersedia)
+3. Navigasi ke dashboard berbasis AdminLTE
+4. Tambahkan data barang, stok masuk/keluar, dll
 
 ## Arsitektur & Teknologi
 
-* **Frontend**: HTML, CSS, JavaScript (bisa ditambahkan framework jika ada)
-* **Backend**: Node.js + Express (atau PHP/Laravel)
-* **Database**: MySQL / SQLite
-* **Tools**: (Tambahkan seperti Docker, Postman, dsb. jika digunakan)
+* **Framework**: Laravel 11
+* **Template**: AdminLTE (versi terakhir)
+* **Frontend**: Blade, HTML, CSS, JavaScript
+* **Backend**: PHP 8.2+
+* **Database**: MySQL
+* **Tools**: Laravel Artisan, Composer
 
 ## Kontribusi
 
@@ -89,7 +86,7 @@ Kontributor sangat diterima. Cara berkontribusi:
 
 ## Lisensi
 
-MIT License © 2025 JustThiriq
+MIT License © 2025 JustThiriq dan iminervaa69
 
 ---
 
