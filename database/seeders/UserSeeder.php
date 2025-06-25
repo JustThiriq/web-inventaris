@@ -13,30 +13,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin
-        User::create([
-            'name' => 'Admin Warehouse',
-            'email' => 'admin@warehouse.com',
-            'role' => 'admin',
-            'is_active' => true,
-            'password' => Hash::make('admin123'),
-            'email_verified_at' => now(),
-        ]);
-
-        // Create sample user
-        User::create([
-            'name' => 'User Gudang',
-            'email' => 'user@warehouse.com',
-            'role' => 'user',
-            'is_active' => true,
-            'password' => Hash::make('user123'),
-            'email_verified_at' => now(),
-        ]);
-
-        // Create additional users for testing
-        User::factory(5)->create([
-            'role' => 'user',
-            'is_active' => true,
-        ]);
+        
     }
 }

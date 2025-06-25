@@ -317,20 +317,39 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
+[
+    'text' => ' Dashboard',
+    'url' => '/dashboard',
+    'icon' => 'fas fa-tachometer-alt', // Dashboard icon
+    'label_color' => 'success',
+    ],
+    ['header' => 'Managemen Produk'],
+
+    [
+        'text' => ' Barang',
+        'icon' => 'fas fa-box', // Items (products, packages)
+        'url' => 'items',
+    ],
+    [
+        'text' => ' Kategori',
+        'icon' => 'fas fa-tags', // Categories, labels
+        'url' => 'categories',
+    ],
+    [
+        'text' => ' Gudang',
+        'icon' => 'fas fa-warehouse', // Warehouses
+        'url' => 'warehouses/create',
+    ],
+
+    ['header' => 'Managemen Aplikasi'],
+    [
+        'text' => ' Pengguna',
+        'icon' => 'fas fa-users', // Users / user management
+        'url' => 'users',
+    ],
+
+        /*
+                [
             'text' => 'profile',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-user',
@@ -339,7 +358,9 @@ return [
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
-        ],
+        ],*/
+
+                /*
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
@@ -378,6 +399,7 @@ return [
                 ],
             ],
         ],
+
         ['header' => 'labels'],
         [
             'text' => 'important',
@@ -393,7 +415,7 @@ return [
             'text' => 'information',
             'icon_color' => 'cyan',
             'url' => '#',
-        ],
+        ],*/
     ],
 
     /*
