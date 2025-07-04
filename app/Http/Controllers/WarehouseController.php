@@ -14,7 +14,7 @@ class WarehouseController extends Controller
     {
         $warehouses = Warehouse::latest()->paginate(10);
 
-        return view('warehouses.index', compact('warehouses'));
+        return view('pages.warehouses.index', compact('warehouses'));
     }
 
     /**
@@ -22,7 +22,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        return view('warehouses.create');
+        return view('pages.warehouses.create');
     }
 
     /**
@@ -49,19 +49,11 @@ class WarehouseController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Warehouse $warehouse)
-    {
-        return view('warehouses.show', compact('warehouse'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Warehouse $warehouse)
     {
-        return view('warehouses.edit', compact('warehouse'));
+        return view('pages.warehouses.edit', compact('warehouse'));
     }
 
     /**
@@ -91,12 +83,6 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        // Check if warehouse has related items
-        if (method_exists($warehouse, 'items') && $warehouse->items()->count() > 0) {
-            return redirect()->route('warehouses.index')
-                ->with('error', 'Gudang tidak dapat dihapus karena masih memiliki item terkait.');
-        }
-
         $warehouse->delete();
 
         return redirect()->route('warehouses.index')

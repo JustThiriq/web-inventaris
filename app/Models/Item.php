@@ -56,6 +56,8 @@ class Item extends Model
         // where category_id is not deleted
         return $query->whereHas('category', function ($q) {
             $q->whereNull('deleted_at');
+        })->whereHas('warehouse', function ($q) {
+            $q->whereNull('deleted_at');
         });
     }
 
