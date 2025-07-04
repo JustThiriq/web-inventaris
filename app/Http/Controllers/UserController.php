@@ -20,12 +20,12 @@ class UserController extends Controller
 
         // Filter by role
         if ($request->filled('role')) {
-            $query->where('role_id', $request->role_id);
+            $query->where('role_id', $request->role);
         }
 
         // Filter by status
         if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
+            $query->where('is_active', $request->status == 'active');
         }
 
         // Search by name or email

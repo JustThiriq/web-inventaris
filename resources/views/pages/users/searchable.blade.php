@@ -3,7 +3,7 @@
         <select name="role" id="roleFilter" class="form-control">
             <option value="">Semua Role</option>
             @foreach ($roles as $role)
-                <option value="{{ $role->slug }}" {{ request('role') == $role->slug ? 'selected' : '' }}>
+                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
                     {{ ucfirst($role->name) }}</option>
             @endforeach
         </select>
@@ -11,8 +11,8 @@
     <div class="col-md-3">
         <select name="status" id="statusFilter" class="form-control">
             <option value="">Semua Status</option>
-            @foreach ($statuses as $status)
-                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+            @foreach ($statuses as $key => $status)
+                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
                     {{ ucfirst($status) }}</option>
             @endforeach
         </select>
