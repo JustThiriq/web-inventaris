@@ -7,17 +7,19 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">
-                        <i class="fas fa-user-edit"></i> Edit User: {{ $user->name }}
-                    </h4>
-                    <div>
-                        <a href="{{ route('users.show', $user) }}" class="btn btn-info mr-2">
-                            <i class="fas fa-eye"></i> Lihat Detail
-                        </a>
-                        <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali ke Daftar User
-                        </a>
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-user-edit"></i> Edit User: {{ $user->name }}
+                        </h4>
+                        <div>
+                            <a href="{{ route('users.show', $user) }}" class="btn btn-info mr-2">
+                                <i class="fas fa-eye"></i> Lihat Detail
+                            </a>
+                            <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Kembali
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -295,22 +297,25 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="row">
+                        <!-- Action Buttons -->
+                        <div class="row mt-3">
                             <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body text-center">
-                                        <button type="submit" class="btn btn-success btn-lg" id="submitBtn">
-                                            <i class="fas fa-save"></i> Update User
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <button type="button" class="btn btn-info" id="previewBtn">
+                                            <i class="fas fa-eye"></i> Preview Perubahan
                                         </button>
-                                        <button type="reset" class="btn btn-warning btn-lg ml-2">
-                                            <i class="fas fa-undo"></i> Reset Form
+                                        <button type="button" class="btn btn-warning" id="resetBtn">
+                                            <i class="fas fa-undo"></i> Reset ke Asli
                                         </button>
-                                        <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-lg ml-2">
-                                            <i class="fas fa-eye"></i> Lihat Detail
-                                        </a>
-                                        <a href="{{ route('users.index') }}" class="btn btn-secondary btn-lg ml-2">
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('items.index') }}" class="btn btn-secondary mr-2">
                                             <i class="fas fa-times"></i> Batal
                                         </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Update Item
+                                        </button>
                                     </div>
                                 </div>
                             </div>
