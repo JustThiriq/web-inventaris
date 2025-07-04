@@ -17,7 +17,7 @@ class ProdukRequestController extends Controller
 
         // Search functionality
         if ($request->filled('search')) {
-            $query->where('nama_produk', 'like', '%' . $request->search . '%');
+            $query->where('nama_produk', 'like', '%'.$request->search.'%');
         }
 
         // Status filter
@@ -78,11 +78,11 @@ class ProdukRequestController extends Controller
             }
 
             return redirect()->route('produk-request.index')
-                ->with('success', 'Produk request berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');
+                ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
 
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -130,7 +130,7 @@ class ProdukRequestController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -142,11 +142,12 @@ class ProdukRequestController extends Controller
     {
         try {
             $produkRequest->delete();
+
             return redirect()->route('produk-request.index')
                 ->with('success', 'Produk request berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -180,7 +181,7 @@ class ProdukRequestController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Status berhasil diupdate!',
-                    'status_badge' => $produkRequest->status_badge
+                    'status_badge' => $produkRequest->status_badge,
                 ]);
             }
 
@@ -189,11 +190,11 @@ class ProdukRequestController extends Controller
 
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 }

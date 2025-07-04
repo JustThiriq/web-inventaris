@@ -14,7 +14,11 @@ return new class extends Migration
             $table->string('location', 255);
             $table->string('manager_name', 100)->nullable();
             $table->string('phone', 20)->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['name', 'location'], 'unique_warehouse_name_location');
+            $table->index(['name', 'location'], 'index_warehouse_name_location');
         });
     }
 

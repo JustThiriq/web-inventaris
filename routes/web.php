@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\RequestController;
-use App\Http\Controllers\StockMovementController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,57 +30,27 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Users
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::resource('users', UserController::class)->except(['show']);
     Route::patch('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 
     // 🔧 Optional: For AJAX/API use
     Route::get('/api/users', [UserController::class, 'getData'])->name('users.api');
 
     // Items - Add these routes
-    Route::get('/items', [ItemController::class, 'index'])->name('items.index');
-    Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
-    Route::post('/items', [ItemController::class, 'store'])->name('items.store');
-    Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
-    Route::get('/items/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
-    Route::put('/items/{item}', [ItemController::class, 'update'])->name('items.update');
-    Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::resource('items', ItemController::class)->except(['show']);
     Route::patch('/items/{item}/activate', [ItemController::class, 'activate'])->name('items.activate');
 
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // Categories
+    Route::resource('categories', CategoryController::class)->except(['show']);
 
     // Produk Request Routes
+    Route::resource('produk-request', ProdukRequestController::class)->except(['show']);
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
-    Route::get('/', [ProdukRequestController::class, 'index'])->name('index');
-    Route::get('/create', [ProdukRequestController::class, 'create'])->name('create');
-    Route::post('/store', [ProdukRequestController::class, 'store'])->name('store');
-    Route::get('/{produkRequest}', [ProdukRequestController::class, 'show'])->name('show');
-    Route::get('/{produkRequest}/edit', [ProdukRequestController::class, 'edit'])->name('edit');
-    Route::put('/{produkRequest}', [ProdukRequestController::class, 'update'])->name('update');
-    Route::delete('/{produkRequest}', [ProdukRequestController::class, 'destroy'])->name('destroy');
-    Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
+        Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
     });
 
     // Warehouse
-    Route::get('/warehouses', [WarehouseController::class, 'index'])->name('warehouses.index');
-    Route::get('/warehouses/create', [WarehouseController::class, 'create'])->name('warehouses.create');
-    Route::post('/warehouses', [WarehouseController::class, 'store'])->name('warehouses.store');
-    Route::get('/warehouses/{warehouse}', [WarehouseController::class, 'show'])->name('warehouses.show');
-    Route::get('/warehouses/{warehouse}/edit', [WarehouseController::class, 'edit'])->name('warehouses.edit');
-    Route::put('/warehouses/{warehouse}', [WarehouseController::class, 'update'])->name('warehouses.update');
-    Route::delete('/warehouses/{warehouse}', [WarehouseController::class, 'destroy'])->name('warehouses.destroy');
-
+    Route::resource('warehouses', WarehouseController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation
     Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');
@@ -89,10 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/items/check-code', [ItemController::class, 'checkCode'])->name('items.check-code');
 
     // Requests (for item requests)
-    Route::get('/requests', [RequestController::class, 'index'])->name('requests.index');
-    Route::get('/requests/create', [RequestController::class, 'create'])->name('requests.create');
-    Route::post('/requests', [RequestController::class, 'store'])->name('requests.store');
-    Route::get('/requests/{request}', [RequestController::class, 'show'])->name('requests.show');
+    Route::resource('requests', RequestController::class)->except(['update', 'edit']);
     Route::patch('/requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
     Route::patch('/requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
 });

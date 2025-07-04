@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('barcode')->nullable();
             $table->integer('min_stock')->nullable()->default(0);
             $table->integer('current_stock')->nullable()->default(0);
+
+            $table->timestamps();
         });
     }
 

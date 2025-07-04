@@ -11,19 +11,19 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Role
- * 
+ *
  * @property int $id
  * @property string $name
  * @property Carbon|null $created_at
- *
- * @package App\Models
  */
 class Role extends Model
 {
-	protected $table = 'roles';
-	public $timestamps = false;
+    protected $table = 'roles';
 
-	protected $fillable = [
-		'name'
-	];
+    public $timestamps = false;
+
+    protected $fillable = [
+        'slug',
+        'name',
+    ];
 }

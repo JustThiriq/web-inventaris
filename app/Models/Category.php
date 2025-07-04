@@ -2,14 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Core\WithSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, WithSearch;
 
     protected $fillable = [
+        'name',
+        'description',
+    ];
+
+    protected $searchable = [
         'name',
         'description',
     ];

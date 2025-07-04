@@ -317,111 +317,46 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
-[
-    'text' => ' Dashboard',
-    'url' => '/dashboard',
-    'icon' => 'fas fa-tachometer-alt', // Dashboard icon
-    'label_color' => 'success',
-    ],
-    ['header' => 'Managemen Produk'],
+        [
+            'text' => ' Dashboard',
+            'url' => '/dashboard',
+            'icon' => 'fas fa-tachometer-alt', // Dashboard icon
+            'label_color' => 'success',
+        ],
+        ['header' => 'Managemen Produk'],
 
-    [
-        'text' => ' Barang',
-        'icon' => 'fas fa-box', // Items (products, packages)
-        'url' => 'items',
-    ],
-    [
-        'text' => ' Kategori',
-        'icon' => 'fas fa-tags', // Categories, labels
-        'url' => 'categories',
-    ],
-    [
-        'text' => ' Gudang',
-        'icon' => 'fas fa-warehouse', // Warehouses
-        'url' => 'warehouses/create',
-    ],
-    [
-        'text' => ' Produk Request',
-        'icon' => 'fas fa-clipboard-list',
-        'url' => 'produk-request',
-        'label_color' => 'warning',
-    ],
-
-    ['header' => 'Managemen Aplikasi'],
-    [
-        'text' => ' Pengguna',
-        'icon' => 'fas fa-users', // Users / user management
-        'url' => 'users',
-    ],
-
-        /*
-                [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+        [
+            'text' => ' Barang',
+            'icon' => 'fas fa-box', // Items (products, packages)
+            'url' => 'items',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],*/
-
-                /*
+            'text' => ' Kategori',
+            'icon' => 'fas fa-tags', // Categories, labels
+            'url' => 'categories',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
+        ],
         [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
+            'text' => ' Gudang',
+            'icon' => 'fas fa-warehouse', // Warehouses
+            'url' => 'warehouses',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
+        ],
+        [
+            'text' => ' Produk Request',
+            'icon' => 'fas fa-clipboard-list',
+            'url' => 'produk-request',
+            'label_color' => 'warning',
         ],
 
-        ['header' => 'labels'],
+        ['header' => 'Managemen Aplikasi', 'role' => ['admin']], // Only visible to admin role
         [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
+            'text' => ' Pengguna',
+            'icon' => 'fas fa-users', // Users / user management
+            'url' => 'users',
+            'role' => ['admin'], // Only visible to admin role
         ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
-        ],*/
     ],
 
     /*
@@ -444,6 +379,7 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
+        App\AdminLte\Menu\Filters\RoleFilter::class,
     ],
 
     /*

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ItemRequest
- * 
+ *
  * @property int $id
  * @property int|null $user_id
  * @property int|null $item_id
@@ -21,43 +21,41 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $request_date
  * @property string|null $notes
  * @property string|null $barcode
- * 
  * @property User|null $user
  * @property Item|null $item
- *
- * @package App\Models
  */
 class ItemRequest extends Model
 {
-	protected $table = 'item_requests';
-	public $timestamps = false;
+    protected $table = 'item_requests';
 
-	protected $casts = [
-		'user_id' => 'int',
-		'item_id' => 'int',
-		'quantity_requested' => 'int',
-		'approved_by' => 'int',
-		'request_date' => 'datetime'
-	];
+    public $timestamps = false;
 
-	protected $fillable = [
-		'user_id',
-		'item_id',
-		'quantity_requested',
-		'status',
-		'approved_by',
-		'request_date',
-		'notes',
-		'barcode'
-	];
+    protected $casts = [
+        'user_id' => 'int',
+        'item_id' => 'int',
+        'quantity_requested' => 'int',
+        'approved_by' => 'int',
+        'request_date' => 'datetime',
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
+    protected $fillable = [
+        'user_id',
+        'item_id',
+        'quantity_requested',
+        'status',
+        'approved_by',
+        'request_date',
+        'notes',
+        'barcode',
+    ];
 
-	public function item()
-	{
-		return $this->belongsTo(Item::class);
-	}
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

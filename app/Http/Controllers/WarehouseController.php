@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
 {
@@ -11,10 +11,10 @@ class WarehouseController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {  
+    {
         $warehouses = Warehouse::latest()->paginate(10);
-       
-        return view('warehouses.index', compact('warehouses'));
+
+        return view('pages.warehouses.index', compact('warehouses'));
     }
 
     /**
@@ -22,7 +22,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        return view('warehouses.create');
+        return view('pages.warehouses.create');
     }
 
     /**
@@ -35,7 +35,7 @@ class WarehouseController extends Controller
             'location' => 'required|string',
             'manager_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'status' => 'nullable|in:active,inactive'
+            'status' => 'nullable|in:active,inactive',
         ]);
 
         // Add default status if not provided
@@ -43,17 +43,9 @@ class WarehouseController extends Controller
 
         // Create warehouse with correct model
         Warehouse::create($validated);
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil ditambahkan.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Warehouse $warehouse)
-    {
-        return view('warehouses.show', compact('warehouse'));
     }
 
     /**
@@ -61,7 +53,7 @@ class WarehouseController extends Controller
      */
     public function edit(Warehouse $warehouse)
     {
-        return view('warehouses.edit', compact('warehouse'));
+        return view('pages.warehouses.edit', compact('warehouse'));
     }
 
     /**
@@ -70,18 +62,18 @@ class WarehouseController extends Controller
     public function update(Request $request, Warehouse $warehouse)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:warehouses,name,' . $warehouse->id,
+            'name' => 'required|string|max:255|unique:warehouses,name,'.$warehouse->id,
             'location' => 'required|string',
             'manager_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'status' => 'nullable|in:active,inactive'
+            'status' => 'nullable|in:active,inactive',
         ]);
 
         // Add default status if not provided
         $validated['status'] = $validated['status'] ?? 'active';
 
         $warehouse->update($validated);
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil diperbarui.');
     }
@@ -91,14 +83,8 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        // Check if warehouse has related items
-        if (method_exists($warehouse, 'items') && $warehouse->items()->count() > 0) {
-            return redirect()->route('warehouses.index')
-                ->with('error', 'Gudang tidak dapat dihapus karena masih memiliki item terkait.');
-        }
-
         $warehouse->delete();
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil dihapus.');
     }
