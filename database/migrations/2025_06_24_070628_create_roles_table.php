@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->integer('id', true);
+            $table->string('slug', 50);
             $table->string('name', 50);
             $table->timestamp('created_at')->nullable()->useCurrent();
         });

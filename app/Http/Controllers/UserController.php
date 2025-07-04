@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
 
         // Filter by role
         if ($request->filled('role')) {
-            $query->where('role', $request->role);
+            $query->where('role_id', $request->role_id);
         }
 
         // Filter by status
@@ -31,13 +32,14 @@ class UserController extends Controller
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
             });
         }
 
         $users = $query->latest()->paginate(10);
+        $roles = Role::get(); // Assuming you have a Role model
 
-        return view('users.index', compact('users'));
+        return view('pages.users.index', compact('users', 'roles'));
     }
 
     /**
@@ -45,9 +47,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = \App\Models\Role::all(); // Assuming you have a Role model
+        $roles = Role::all(); // Assuming you have a Role model
 
-        return view('users.create', compact('roles'));
+        return view('pages.users.create', compact('roles'));
     }
 
     /**
@@ -59,16 +61,23 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role'     => 'required|in:admin,user',
-            'is_active'=> 'sometimes|boolean',
+            'role_id'     => 'required|exists:roles,id',
+            'is_active' => 'sometimes|boolean',
         ]);
+        // check if the password confirmation is set
+        if (isset($validated['password_confirmation'])) {
+            if ($validated['password'] !== $validated['password_confirmation']) {
+                return redirect()->back()->withErrors(['password' => 'Password confirmation does not match.']);
+            }
+            // Remove password confirmation from validated data
+            unset($validated['password_confirmation']);
+        }
 
         // Map the password to the model's column (password_hash)
         $validated['password'] = Hash::make($validated['password']);
-        unset($validated['password'], $validated['password_confirmation']);
 
         // Checkbox may not be present so default to false if not set
-        $validated['is_active'] = $request->has('is_active');   
+        $validated['is_active'] = $request->has('is_active');
 
         User::create($validated);
 
@@ -77,23 +86,12 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified user.
-     */
-    public function show(User $user)
-    {
-        // Load only the defined relationship in the model.
-        $user->load('itemRequests');
-
-        return view('users.show', compact('user'));
-    }
-
-    /**
      * Show the form for editing the specified user.
      */
     public function edit(User $user)
     {
         $roles = Role::orderBy('name')->get();
-        return view('users.edit', compact('user', 'roles'));
+        return view('pages.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -111,13 +109,13 @@ class UserController extends Controller
         ]);
 
         $data = $request->only(['name', 'email', 'role_id', 'phone', 'is_active']);
-        
+
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
-        
+
         $user->update($data);
-        
+
         return redirect()->route('users.edit', $user)->with('success', 'User berhasil diupdate!');
     }
 
@@ -127,7 +125,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Prevent deleting the current logged-in user.
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('users.index')
                 ->with('error', 'Tidak dapat menghapus akun sendiri.');
         }
@@ -155,14 +153,14 @@ class UserController extends Controller
      */
     public function getData(Request $request)
     {
-        $users = User::select(['id', 'name', 'email', 'role', 'is_active', 'created_at'])
-            ->when($request->role, function ($query, $role) {
-                return $query->where('role', $role);
+        $users = User::select(['id', 'name', 'email', 'role_id', 'is_active', 'created_at'])
+            ->when($request->role_id, function ($query, $role) {
+                return $query->where('role_id', $role);
             })
             ->when($request->search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             })
             ->latest()

@@ -34,19 +34,27 @@ class User extends Authenticatable
 	protected $table = 'users';
 
 	protected $casts = [
-		'is_active' => 'bool'
+		'is_active' => 'bool',
+		'last_login' => 'datetime',
 	];
 
 	protected $fillable = [
 		'name',
 		'email',
 		'password',
-		'role',
-		'is_active'
+		'role_id',
+		'is_active',
+		'last_login',
+		'phone',
 	];
 
 	public function item_requests()
 	{
 		return $this->hasMany(ItemRequest::class);
+	}
+
+	public function role()
+	{
+		return $this->belongsTo(Role::class);
 	}
 }
