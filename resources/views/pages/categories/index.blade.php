@@ -52,7 +52,8 @@
                                                         method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm mr-2 mb-2" title="Hapus"
+                                                        <button type="submit" class="btn btn-danger btn-sm mr-2 mb-2"
+                                                            title="Hapus"
                                                             onclick="return confirm('Yakin ingin menghapus kategori ini?')">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
@@ -70,13 +71,7 @@
                         </div>
 
                         <!-- Pagination -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                Menampilkan {{ $categories->firstItem() ?? 0 }} - {{ $categories->lastItem() ?? 0 }}
-                                dari {{ $categories->total() }} data
-                            </div>
-                            {{ $categories->withQueryString()->links() }}
-                        </div>
+                        @include('components.pagination', ['pagination' => $categories])
                     </div>
                 </div>
             </div>
