@@ -54,6 +54,14 @@ class Item extends Model
 		'current_stock'
 	];
 
+	public function scopeActive($query)
+	{
+		// where category_id is not deleted
+		return $query->whereHas('category', function ($q) {
+			$q->whereNull('deleted_at');
+		});
+	}
+
 	public function category()
 	{
 		return $this->belongsTo(Category::class);

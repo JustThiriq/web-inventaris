@@ -14,37 +14,37 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Item::with(['category', 'warehouse']);
-        
+        $query = Item::active()->with(['category', 'warehouse']);
+
         // Filter by category_id
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
-        
+
         // Filter by warehouse_id
         if ($request->filled('warehouse_id')) {
             $query->where('warehouse_id', $request->warehouse_id);
         }
-        
+
         // Search by code or name
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('code', 'like', '%' . $request->search . '%')
-                  ->orWhere('name', 'like', '%' . $request->search . '%');
+                    ->orWhere('name', 'like', '%' . $request->search . '%');
             });
         }
-        
+
         // Filter by low stock items
         if ($request->filled('low_stock') && $request->low_stock == 'true') {
             $query->whereRaw('current_stock <= min_stock');
         }
-        
+
         $items = $query->latest()->paginate(10);
-        
+
         // Get categories and warehouses for filter dropdowns
         $categories = Category::all();
         $warehouses = Warehouse::all();
-        
+
         return view('items.index', compact('items', 'categories', 'warehouses'));
     }
 
@@ -74,7 +74,7 @@ class ItemController extends Controller
         ]);
 
         Item::create($validated);
-        
+
         return redirect()->route('items.index')
             ->with('success', 'Item berhasil ditambahkan.');
     }
@@ -115,7 +115,7 @@ class ItemController extends Controller
         ]);
 
         $item->update($validated);
-        
+
         return redirect()->route('items.index')
             ->with('success', 'Item berhasil diperbarui.');
     }
@@ -132,7 +132,7 @@ class ItemController extends Controller
         }
 
         $item->delete();
-        
+
         return redirect()->route('items.index')
             ->with('success', 'Item berhasil dihapus.');
     }
@@ -146,7 +146,7 @@ class ItemController extends Controller
             ->whereRaw('current_stock <= min_stock')
             ->latest()
             ->paginate(10);
-            
+
         return view('items.low-stock', compact('items'));
     }
 
@@ -160,7 +160,7 @@ class ItemController extends Controller
         ]);
 
         $item->update($validated);
-        
+
         return redirect()->back()
             ->with('success', 'Stock item berhasil diperbarui.');
     }
