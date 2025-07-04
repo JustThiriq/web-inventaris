@@ -18,7 +18,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $name
  * @property string $email
  * @property string $password_hash
- * @property string $role
  * @property bool $is_active
  * @property Carbon $created_at
  * @property Carbon $updated_at

@@ -329,16 +329,19 @@ return [
             'text' => ' Barang',
             'icon' => 'fas fa-box', // Items (products, packages)
             'url' => 'items',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Kategori',
             'icon' => 'fas fa-tags', // Categories, labels
             'url' => 'categories',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Gudang',
             'icon' => 'fas fa-warehouse', // Warehouses
-            'url' => 'warehouses/create',
+            'url' => 'warehouses',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Produk Request',
@@ -347,81 +350,13 @@ return [
             'label_color' => 'warning',
         ],
 
-        ['header' => 'Managemen Aplikasi'],
+        ['header' => 'Managemen Aplikasi', 'role' => ['admin']], // Only visible to admin role
         [
             'text' => ' Pengguna',
             'icon' => 'fas fa-users', // Users / user management
             'url' => 'users',
+            'role' => ['admin'], // Only visible to admin role
         ],
-
-        /*
-                [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],*/
-
-        /*
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
-
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
-        ],*/
     ],
 
     /*
@@ -444,6 +379,7 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
+        App\AdminLte\Menu\Filters\RoleFilter::class,
     ],
 
     /*
