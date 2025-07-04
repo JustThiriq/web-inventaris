@@ -45,19 +45,19 @@
                                             <td>
                                                 <div class="btn-group" role="group">
                                                     <a href="{{ route('categories.edit', $category) }}"
-                                                        class="btn btn-warning btn-sm mr-2 mb-2" title="Edit">
+                                                        class="btn btn-warning btn-sm" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form action="{{ route('categories.destroy', $category) }}"
-                                                        method="POST" class="d-inline">
+                                                        method="POST" class="d-inline"
+                                                        id="delete-form-{{ $category->id }}">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm mr-2 mb-2"
-                                                            title="Hapus"
-                                                            onclick="return confirm('Yakin ingin menghapus kategori ini?')">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
                                                     </form>
+                                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus"
+                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus kategori ini?')) { document.getElementById('delete-form-{{ $category->id }}').submit(); }">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
