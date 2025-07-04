@@ -8,6 +8,7 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ProdukRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,15 +61,27 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-    // Warehouse 
+    // Produk Request Routes
+    Route::prefix('produk-request')->name('produk-request.')->group(function () {
+    Route::get('/', [ProdukRequestController::class, 'index'])->name('index');
+    Route::get('/create', [ProdukRequestController::class, 'create'])->name('create');
+    Route::post('/store', [ProdukRequestController::class, 'store'])->name('store');
+    Route::get('/{produkRequest}', [ProdukRequestController::class, 'show'])->name('show');
+    Route::get('/{produkRequest}/edit', [ProdukRequestController::class, 'edit'])->name('edit');
+    Route::put('/{produkRequest}', [ProdukRequestController::class, 'update'])->name('update');
+    Route::delete('/{produkRequest}', [ProdukRequestController::class, 'destroy'])->name('destroy');
+    Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
+    });
+
+    // Warehouse
     Route::get('/warehouses', [WarehouseController::class, 'index'])->name('warehouses.index');
     Route::get('/warehouses/create', [WarehouseController::class, 'create'])->name('warehouses.create');
     Route::post('/warehouses', [WarehouseController::class, 'store'])->name('warehouses.store');
     Route::get('/warehouses/{warehouse}', [WarehouseController::class, 'show'])->name('warehouses.show');
     Route::get('/warehouses/{warehouse}/edit', [WarehouseController::class, 'edit'])->name('warehouses.edit');
     Route::put('/warehouses/{warehouse}', [WarehouseController::class, 'update'])->name('warehouses.update');
-    Route::delete('/warehouses/{warehouse}', [WarehouseController::class, 'destroy'])->name('warehouses.destroy'); 
-    
+    Route::delete('/warehouses/{warehouse}', [WarehouseController::class, 'destroy'])->name('warehouses.destroy');
+
 
     // 🔧 Optional: For AJAX/API use and barcode generation
     Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');

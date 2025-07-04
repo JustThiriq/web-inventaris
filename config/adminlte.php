@@ -338,7 +338,13 @@ return [
     [
         'text' => ' Gudang',
         'icon' => 'fas fa-warehouse', // Warehouses
-        'url' => 'warehouses',
+        'url' => 'warehouses/create',
+    ],
+    [
+        'text' => ' Produk Request',
+        'icon' => 'fas fa-clipboard-list',
+        'url' => 'produk-request',
+        'label_color' => 'warning',
     ],
 
     ['header' => 'Managemen Aplikasi'],
