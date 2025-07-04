@@ -34,7 +34,7 @@
                                             <h5 class="card-title mb-0">Informasi Dasar</h5>
                                         </div>
                                         <div class="card-body">
-                                            @include('categories.form')
+                                            @include('pages.categories.form')
                                         </div>
                                     </div>
                                 </div>

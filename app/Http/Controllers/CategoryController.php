@@ -16,7 +16,7 @@ class CategoryController extends Controller
             ->search($request->input('search'))
             ->paginate(10);
 
-        return view('categories.index', compact('categories'));
+        return view('pages.categories.index', compact('categories'));
     }
 
     /**
@@ -24,7 +24,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        return view('pages.categories.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories.edit', compact('category'));
+        return view('pages.categories.edit', compact('category'));
     }
 
     /**
