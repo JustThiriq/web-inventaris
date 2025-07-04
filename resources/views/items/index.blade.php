@@ -70,17 +70,17 @@
                         <table class="table table-striped table-hover">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Kode</th>
-                                    <th>Nama Item</th>
-                                    <th>Kategori</th>
-                                    <th>Gudang</th>
-                                    <th>Barcode</th>
-                                    <th>Stok Min</th>
-                                    <th>Stok Saat Ini</th>
-                                    <th>Status Stok</th>
-                                    <th>Dibuat</th>
-                                    <th>Aksi</th>
+                                    <th style="min-width: 150px">#</th>
+                                    <th style="min-width: 150px">Kode</th>
+                                    <th style="min-width: 150px">Nama Item</th>
+                                    <th style="min-width: 150px">Kategori</th>
+                                    <th style="min-width: 150px">Gudang</th>
+                                    <th style="min-width: 150px">Barcode</th>
+                                    <th style="min-width: 150px">Stok Min</th>
+                                    <th style="min-width: 150px">Stok Saat Ini</th>
+                                    <th style="min-width: 150px">Status Stok</th>
+                                    <th style="min-width: 150px">Dibuat</th>
+                                    <th style="min-width: 150px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
