@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
 {
@@ -11,9 +11,9 @@ class WarehouseController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {  
+    {
         $warehouses = Warehouse::latest()->paginate(10);
-       
+
         return view('warehouses.index', compact('warehouses'));
     }
 
@@ -35,7 +35,7 @@ class WarehouseController extends Controller
             'location' => 'required|string',
             'manager_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'status' => 'nullable|in:active,inactive'
+            'status' => 'nullable|in:active,inactive',
         ]);
 
         // Add default status if not provided
@@ -43,7 +43,7 @@ class WarehouseController extends Controller
 
         // Create warehouse with correct model
         Warehouse::create($validated);
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil ditambahkan.');
     }
@@ -70,18 +70,18 @@ class WarehouseController extends Controller
     public function update(Request $request, Warehouse $warehouse)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:warehouses,name,' . $warehouse->id,
+            'name' => 'required|string|max:255|unique:warehouses,name,'.$warehouse->id,
             'location' => 'required|string',
             'manager_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'status' => 'nullable|in:active,inactive'
+            'status' => 'nullable|in:active,inactive',
         ]);
 
         // Add default status if not provided
         $validated['status'] = $validated['status'] ?? 'active';
 
         $warehouse->update($validated);
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil diperbarui.');
     }
@@ -98,7 +98,7 @@ class WarehouseController extends Controller
         }
 
         $warehouse->delete();
-       
+
         return redirect()->route('warehouses.index')
             ->with('success', 'Gudang berhasil dihapus.');
     }

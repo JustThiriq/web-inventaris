@@ -317,42 +317,42 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
-[
-    'text' => ' Dashboard',
-    'url' => '/dashboard',
-    'icon' => 'fas fa-tachometer-alt', // Dashboard icon
-    'label_color' => 'success',
-    ],
-    ['header' => 'Managemen Produk'],
+        [
+            'text' => ' Dashboard',
+            'url' => '/dashboard',
+            'icon' => 'fas fa-tachometer-alt', // Dashboard icon
+            'label_color' => 'success',
+        ],
+        ['header' => 'Managemen Produk'],
 
-    [
-        'text' => ' Barang',
-        'icon' => 'fas fa-box', // Items (products, packages)
-        'url' => 'items',
-    ],
-    [
-        'text' => ' Kategori',
-        'icon' => 'fas fa-tags', // Categories, labels
-        'url' => 'categories',
-    ],
-    [
-        'text' => ' Gudang',
-        'icon' => 'fas fa-warehouse', // Warehouses
-        'url' => 'warehouses/create',
-    ],
-    [
-        'text' => ' Produk Request',
-        'icon' => 'fas fa-clipboard-list',
-        'url' => 'produk-request',
-        'label_color' => 'warning',
-    ],
+        [
+            'text' => ' Barang',
+            'icon' => 'fas fa-box', // Items (products, packages)
+            'url' => 'items',
+        ],
+        [
+            'text' => ' Kategori',
+            'icon' => 'fas fa-tags', // Categories, labels
+            'url' => 'categories',
+        ],
+        [
+            'text' => ' Gudang',
+            'icon' => 'fas fa-warehouse', // Warehouses
+            'url' => 'warehouses/create',
+        ],
+        [
+            'text' => ' Produk Request',
+            'icon' => 'fas fa-clipboard-list',
+            'url' => 'produk-request',
+            'label_color' => 'warning',
+        ],
 
-    ['header' => 'Managemen Aplikasi'],
-    [
-        'text' => ' Pengguna',
-        'icon' => 'fas fa-users', // Users / user management
-        'url' => 'users',
-    ],
+        ['header' => 'Managemen Aplikasi'],
+        [
+            'text' => ' Pengguna',
+            'icon' => 'fas fa-users', // Users / user management
+            'url' => 'users',
+        ],
 
         /*
                 [
@@ -366,7 +366,7 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],*/
 
-                /*
+        /*
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',

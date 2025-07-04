@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             // Data Seeding
             CategorySeeder::class,
             WarehouseSeeder::class,
-            ItemSeeder::class
+            ItemSeeder::class,
         ]);
     }
 }

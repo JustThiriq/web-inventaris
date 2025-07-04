@@ -8,12 +8,12 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class User
- * 
+ *
  * @property int $id
  * @property string $name
  * @property string $email
@@ -23,38 +23,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string|null $deleted_at
- * 
  * @property Collection|ItemRequest[] $item_requests
- *
- * @package App\Models
  */
 class User extends Authenticatable
 {
-	use SoftDeletes;
-	protected $table = 'users';
+    use SoftDeletes;
 
-	protected $casts = [
-		'is_active' => 'bool',
-		'last_login' => 'datetime',
-	];
+    protected $table = 'users';
 
-	protected $fillable = [
-		'name',
-		'email',
-		'password',
-		'role_id',
-		'is_active',
-		'last_login',
-		'phone',
-	];
+    protected $casts = [
+        'is_active' => 'bool',
+        'last_login' => 'datetime',
+    ];
 
-	public function item_requests()
-	{
-		return $this->hasMany(ItemRequest::class);
-	}
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role_id',
+        'is_active',
+        'last_login',
+        'phone',
+    ];
 
-	public function role()
-	{
-		return $this->belongsTo(Role::class);
-	}
+    public function item_requests()
+    {
+        return $this->hasMany(ItemRequest::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

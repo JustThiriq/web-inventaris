@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Item;
 use App\Models\Category;
+use App\Models\Item;
 use App\Models\Warehouse;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
@@ -29,8 +29,8 @@ class ItemController extends Controller
         // Search by code or name
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('code', 'like', '%' . $request->search . '%')
-                    ->orWhere('name', 'like', '%' . $request->search . '%');
+                $q->where('code', 'like', '%'.$request->search.'%')
+                    ->orWhere('name', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -55,6 +55,7 @@ class ItemController extends Controller
     {
         $categories = Category::all();
         $warehouses = Warehouse::all();
+
         return view('items.create', compact('categories', 'warehouses'));
     }
 
@@ -86,6 +87,7 @@ class ItemController extends Controller
     {
         // Load relationships defined in the model
         $item->load(['category', 'warehouse', 'item_requests']);
+
         return view('items.show', compact('item'));
     }
 
@@ -96,6 +98,7 @@ class ItemController extends Controller
     {
         $categories = Category::all();
         $warehouses = Warehouse::all();
+
         return view('items.edit', compact('item', 'categories', 'warehouses'));
     }
 
@@ -105,11 +108,11 @@ class ItemController extends Controller
     public function update(Request $request, Item $item)
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:items,code,' . $item->id,
+            'code' => 'required|string|max:255|unique:items,code,'.$item->id,
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
-            'barcode' => 'nullable|string|max:255|unique:items,barcode,' . $item->id,
+            'barcode' => 'nullable|string|max:255|unique:items,barcode,'.$item->id,
             'min_stock' => 'nullable|integer|min:0',
             'current_stock' => 'nullable|integer|min:0',
         ]);

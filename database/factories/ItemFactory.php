@@ -20,6 +20,7 @@ class ItemFactory extends Factory
     {
         $categoryIds = Category::pluck('id')->toArray();
         $warehouseIds = Warehouse::pluck('id')->toArray();
+
         return [
             'code' => fake()->unique()->word,
             'name' => fake()->word,

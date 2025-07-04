@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\RequestController;
-use App\Http\Controllers\StockMovementController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,14 +62,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Produk Request Routes
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
-    Route::get('/', [ProdukRequestController::class, 'index'])->name('index');
-    Route::get('/create', [ProdukRequestController::class, 'create'])->name('create');
-    Route::post('/store', [ProdukRequestController::class, 'store'])->name('store');
-    Route::get('/{produkRequest}', [ProdukRequestController::class, 'show'])->name('show');
-    Route::get('/{produkRequest}/edit', [ProdukRequestController::class, 'edit'])->name('edit');
-    Route::put('/{produkRequest}', [ProdukRequestController::class, 'update'])->name('update');
-    Route::delete('/{produkRequest}', [ProdukRequestController::class, 'destroy'])->name('destroy');
-    Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
+        Route::get('/', [ProdukRequestController::class, 'index'])->name('index');
+        Route::get('/create', [ProdukRequestController::class, 'create'])->name('create');
+        Route::post('/store', [ProdukRequestController::class, 'store'])->name('store');
+        Route::get('/{produkRequest}', [ProdukRequestController::class, 'show'])->name('show');
+        Route::get('/{produkRequest}/edit', [ProdukRequestController::class, 'edit'])->name('edit');
+        Route::put('/{produkRequest}', [ProdukRequestController::class, 'update'])->name('update');
+        Route::delete('/{produkRequest}', [ProdukRequestController::class, 'destroy'])->name('destroy');
+        Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
     });
 
     // Warehouse
@@ -81,7 +80,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/warehouses/{warehouse}/edit', [WarehouseController::class, 'edit'])->name('warehouses.edit');
     Route::put('/warehouses/{warehouse}', [WarehouseController::class, 'update'])->name('warehouses.update');
     Route::delete('/warehouses/{warehouse}', [WarehouseController::class, 'destroy'])->name('warehouses.destroy');
-
 
     // 🔧 Optional: For AJAX/API use and barcode generation
     Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');
