@@ -7,19 +7,17 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0">
-                            <i class="fas fa-edit"></i> Edit Item: {{ $item->name }}
-                        </h4>
-                        <div>
-                            <a href="{{ route('items.show', $item) }}" class="btn btn-info mr-2">
-                                <i class="fas fa-eye"></i> Lihat Detail
-                            </a>
-                            <a href="{{ route('items.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Kembali
-                            </a>
-                        </div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-edit"></i> Edit Item: {{ $item->name }}
+                    </h4>
+                    <div>
+                        <a href="{{ route('items.show', $item) }}" class="btn btn-info mr-2">
+                            <i class="fas fa-eye"></i> Detail
+                        </a>
+                        <a href="{{ route('items.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
                     </div>
                 </div>
 
@@ -338,22 +336,26 @@
                         <!-- Action Buttons -->
                         <div class="row mt-3">
                             <div class="col-12">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <button type="button" class="btn btn-info" id="previewBtn">
-                                            <i class="fas fa-eye"></i> Preview Perubahan
-                                        </button>
-                                        <button type="button" class="btn btn-warning" id="resetBtn">
-                                            <i class="fas fa-undo"></i> Reset ke Asli
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <a href="{{ route('items.index') }}" class="btn btn-secondary mr-2">
-                                            <i class="fas fa-times"></i> Batal
-                                        </a>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save"></i> Update Item
-                                        </button>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <button type="button" class="btn btn-info" id="previewBtn">
+                                                    <i class="fas fa-eye"></i> Preview Perubahan
+                                                </button>
+                                                <button type="button" class="btn btn-warning" id="resetBtn">
+                                                    <i class="fas fa-undo"></i> Reset ke Asli
+                                                </button>
+                                            </div>
+                                            <div>
+                                                <a href="{{ route('items.index') }}" class="btn btn-secondary mr-2">
+                                                    <i class="fas fa-times"></i> Batal
+                                                </a>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-save"></i> Update Item
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -416,46 +418,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 <button type="button" class="btn btn-primary" id="saveFromPreview">
-                    <i class="fas fa-save"></i> Update Item
+                    <i class="fas fa-save"></i> Update Kategori
                 </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Stock Adjustment Modal -->
-<div class="modal fade" id="stockAdjustmentModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Penyesuaian Stok</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Stok Saat Ini: <strong>{{ $item->current_stock ?? 0 }}</strong></label>
-                </div>
-                <div class="form-group">
-                    <label for="adjustment_type">Jenis Penyesuaian:</label>
-                    <select class="form-control" id="adjustment_type">
-                        <option value="add">Tambah Stok (+)</option>
-                        <option value="subtract">Kurangi Stok (-)</option>
-                        <option value="set">Set Stok Langsung</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="adjustment_value">Nilai:</label>
-                    <input type="number" class="form-control" id="adjustment_value" min="0" placeholder="0">
-                </div>
-                <div class="form-group">
-                    <label>Hasil: <span id="adjustment_result" class="font-weight-bold">-</span></label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="applyAdjustment">Terapkan</button>
             </div>
         </div>
     </div>

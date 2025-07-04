@@ -185,13 +185,28 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            Menampilkan {{ $items->firstItem() ?? 0 }} - {{ $items->lastItem() ?? 0 }}
-                            dari {{ $items->total() }} data
+                    <!-- Enhanced Pagination -->
+                    @if($items->hasPages())
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="datatable-info">
+                                    Menampilkan {{ $items->firstItem() ?? 0 }} - {{ $items->lastItem() ?? 0 }}
+                                    dari {{ $items->total() }} total data
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="float-right">
+                                    {!! $items->appends(request()->query())->links('pagination::bootstrap-4') !!}
+                                </div>
+                            </div>
                         </div>
-                        {{ $items->links() }}
-                    </div>
+                    @else
+                        @if($items->count() > 0)
+                            <div class="text-muted mt-3">
+                                Total {{ $items->count() }} data gudang
+                            </div>
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>

@@ -338,7 +338,7 @@ return [
     [
         'text' => ' Gudang',
         'icon' => 'fas fa-warehouse', // Warehouses
-        'url' => 'warehouses/create',
+        'url' => 'warehouses',
     ],
 
     ['header' => 'Managemen Aplikasi'],
