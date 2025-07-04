@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('location', 255);
             $table->string('manager_name', 100)->nullable();
-            $table->string('phone', 20)->nullable();
             $table->timestamps();
         });
     }
