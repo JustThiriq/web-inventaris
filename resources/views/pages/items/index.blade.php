@@ -12,9 +12,16 @@
                             <h4 class="card-title mb-0">
                                 Manajemen Item
                             </h4>
-                            <a href="{{ route('items.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Item
-                            </a>
+                            <div>
+                                <button class="btn btn-info" data-toggle="modal" data-target="#scanBarcodeModal">
+                                    <i class="fas fa-camera"></i>
+                                    <span class="d-none d-md-inline">Scan Barcode</span>
+                                </button>
+                                <a href="{{ route('items.create') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    <span class="d-none d-md-inline">Tambah Item</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -187,11 +194,96 @@
         </div>
     </div>
 
+
+    <div class="modal" id="scanBarcodeModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cari Item</h4>
+
+                    {{-- Close --}}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="scanBarcodeForm">
+                        <div class="form-group">
+                            {{-- camera --}}
+                            <video id="video" width="100%" height="auto" autoplay></video>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('js')
         <script>
             $(document).ready(function() {
                 // Initialize tooltips
                 $('[data-toggle="tooltip"]').tooltip();
+
+                // Initialize barcode scanner
+                const video = document.getElementById('video');
+                const constraints = {
+                    video: {
+                        facingMode: 'environment',
+                        width: {
+                            ideal: 1280
+                        },
+                        height: {
+                            ideal: 720
+                        }
+                    }
+                };
+
+                // Start the camera
+                const onStartCamera = () => {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then(stream => {
+                            video.srcObject = stream;
+                            video.play();
+
+                            const barcodeDetector = new BarcodeDetector({
+                                formats: ['code_128', 'ean_13', 'ean_8', 'upc_a', 'upc_e']
+                            });
+                            setInterval(() => {
+                                barcodeDetector.detect(video)
+                                    .then(barcodes => {
+                                        if (barcodes.length > 0) {
+                                            const barcode = barcodes[0].rawValue;
+                                            // Redirect to item search with barcode
+                                            window.location.href =
+                                                '{{ route('items.index') }}?search=' +
+                                                encodeURIComponent(barcode);
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.error('Error detecting barcode: ', err);
+                                    });
+                            }, 1000);
+                        })
+                        .catch(err => {
+                            console.error('Error accessing camera: ', err);
+                            alert('Tidak dapat mengakses kamera. Pastikan izin kamera sudah diberikan.');
+                        });
+                };
+
+                // Start when modal is shown
+                $('#scanBarcodeModal').on('shown.bs.modal', function() {
+                    onStartCamera();
+                });
+
+                // Stop the camera when modal is hidden
+                $('#scanBarcodeModal').on('hidden.bs.modal', function() {
+                    const stream = video.srcObject;
+                    if (stream) {
+                        const tracks = stream.getTracks();
+                        tracks.forEach(track => track.stop());
+                    }
+                    video.srcObject = null;
+                });
 
                 // Filter functionality
                 $('#categoryFilter, #warehouseFilter, #stockFilter').change(function() {

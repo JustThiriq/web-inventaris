@@ -28,10 +28,7 @@ class ItemController extends Controller
 
         // Search by code or name
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('code', 'like', '%' . $request->search . '%')
-                    ->orWhere('name', 'like', '%' . $request->search . '%');
-            });
+            $query->search($request->search);
         }
 
         // Filter by low stock items
