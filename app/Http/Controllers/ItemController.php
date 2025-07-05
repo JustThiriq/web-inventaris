@@ -59,6 +59,23 @@ class ItemController extends Controller
         return view('pages.items.index', compact('items', 'categories', 'warehouses'));
     }
 
+    public function searchByBarcode($code)
+    {
+        $item = Item::where('barcode', $code)->first();
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ]);
+    }
+
     public function printBarcode(Item $item)
     {
         // Load relationships defined in the model

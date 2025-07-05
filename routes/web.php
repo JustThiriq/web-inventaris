@@ -7,6 +7,7 @@ use App\Http\Controllers\ProdukRequestController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('items', ItemController::class)->except(['show']);
     Route::patch('/items/{item}/activate', [ItemController::class, 'activate'])->name('items.activate');
     Route::get('/items/{item}/print-barcode', [ItemController::class, 'printBarcode'])->name('items.print-barcode');
+    Route::get('/items/search-by-barcode/{code}', [ItemController::class, 'searchByBarcode'])->name('items.search-by-barcode');
 
 
     // Categories

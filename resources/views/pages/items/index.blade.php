@@ -253,10 +253,37 @@
                                     .then(barcodes => {
                                         if (barcodes.length > 0) {
                                             const barcode = barcodes[0].rawValue;
-                                            // Redirect to item search with barcode
-                                            window.location.href =
-                                                '{{ route('items.index') }}?search=' +
-                                                encodeURIComponent(barcode);
+
+                                            // Check barcode is valid
+                                            const url =
+                                                `{{ route('items.search-by-barcode', ['code' => '___BARCODE___']) }}`
+                                                .replace('___BARCODE___', barcode);
+                                            console.log('Searching for barcode:', url);
+                                            const response = fetch(url, {
+                                                method: 'GET',
+                                                headers: {
+                                                    'X-Requested-With': 'XMLHttpRequest'
+                                                }
+                                            });
+                                            response.then(res => res.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        // Redirect to item edit page
+                                                        window.location.href =
+                                                            `{{ url('items') }}/${data.item.id}/edit`;
+                                                    } else {
+                                                        alert('Item tidak ditemukan dengan barcode: ' +
+                                                            barcode);
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    console.error(
+                                                        'Error searching item by barcode: ',
+                                                        err);
+                                                    alert('Terjadi kesalahan saat mencari item dengan barcode: ' +
+                                                        barcode);
+                                                });
+
                                         }
                                     })
                                     .catch(err => {
