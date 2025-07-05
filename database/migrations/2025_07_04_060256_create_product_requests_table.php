@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('produk_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_produk');
-            $table->decimal('harga_estimasi', 15, 2)->default(0);
-            $table->text('deskripsi')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('request_number')->unique();
+            $table->date('request_date');
+            $table->text('description')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->text('catatan_admin')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable(); // jika ada sistem user
+            $table->text('admin_notes')->nullable();
             $table->timestamps();
+            $table->softDeletes(); // Optional: if you want to implement soft deletes
         });
     }
 

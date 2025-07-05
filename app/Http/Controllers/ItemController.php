@@ -28,15 +28,26 @@ class ItemController extends Controller
 
         // Search by code or name
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('code', 'like', '%'.$request->search.'%')
-                    ->orWhere('name', 'like', '%'.$request->search.'%');
-            });
+            $query->search($request->search);
         }
 
         // Filter by low stock items
-        if ($request->filled('low_stock') && $request->low_stock == 'true') {
-            $query->whereRaw('current_stock <= min_stock');
+        if ($request->filled('stock')) {
+            switch ($request->stock) {
+                case 'low':
+                    $query->whereRaw('current_stock <= min_stock');
+                    break;
+                case 'warning':
+                    $query->whereRaw('current_stock <= min_stock * 2')
+                        ->whereRaw('current_stock > min_stock');
+                    break;
+                case 'high':
+                    $query->whereRaw('current_stock > min_stock * 2');
+                    break;
+                default:
+                    // No specific stock filter
+                    break;
+            }
         }
 
         $items = $query->latest()->paginate(10);
@@ -45,7 +56,32 @@ class ItemController extends Controller
         $categories = Category::all();
         $warehouses = Warehouse::all();
 
-        return view('items.index', compact('items', 'categories', 'warehouses'));
+        return view('pages.items.index', compact('items', 'categories', 'warehouses'));
+    }
+
+    public function searchByBarcode($code)
+    {
+        $item = Item::where('barcode', $code)->first();
+
+        if (! $item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'item' => $item,
+        ]);
+    }
+
+    public function printBarcode(Item $item)
+    {
+        // Load relationships defined in the model
+        $item->load(['category', 'warehouse']);
+
+        return view('pages.items.print-barcode', compact('item'));
     }
 
     /**
@@ -56,7 +92,7 @@ class ItemController extends Controller
         $categories = Category::all();
         $warehouses = Warehouse::all();
 
-        return view('items.create', compact('categories', 'warehouses'));
+        return view('pages.items.create', compact('categories', 'warehouses'));
     }
 
     /**
@@ -88,7 +124,7 @@ class ItemController extends Controller
         // Load relationships defined in the model
         $item->load(['category', 'warehouse', 'item_requests']);
 
-        return view('items.show', compact('item'));
+        return view('pages.items.show', compact('item'));
     }
 
     /**
@@ -99,7 +135,7 @@ class ItemController extends Controller
         $categories = Category::all();
         $warehouses = Warehouse::all();
 
-        return view('items.edit', compact('item', 'categories', 'warehouses'));
+        return view('pages.items.edit', compact('item', 'categories', 'warehouses'));
     }
 
     /**
@@ -150,7 +186,7 @@ class ItemController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('items.low-stock', compact('items'));
+        return view('pages.items.low-stock', compact('items'));
     }
 
     /**

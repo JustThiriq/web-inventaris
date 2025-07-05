@@ -2,374 +2,251 @@
 
 @section('title', 'Tambah Produk Request')
 
-@section('content_header')
-    <h1>
-        <i class="fas fa-plus-circle"></i> Tambah Produk Request
-    </h1>
-@stop
-
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex w-100 align-items-center justify-content-between">
-                    <h3 class="card-title mb-0">
-                        <i class="fas fa-plus-circle"></i> Form Tambah Produk Request
-                    </h3>
-                    <a href="{{ route('produk-request.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Kembali
-                    </a>
+    <div class="container-fluid pt-3">
+        <h3><i class="fas fa-plus-circle"></i> Tambah Produk Request</h3>
+
+        <form action="{{ route('produk-request.store') }}" method="POST">
+            @csrf
+
+            @include('components.flash-message')
+
+            <!-- Header Request -->
+            <div class="card mb-4">
+                <div class="card-body row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Nomor Request</label>
+                            <input type="text" name="request_number" class="form-control"
+                                value="{{ old('request_number', $requestNumber ?? '') }}" required readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Tanggal Request</label>
+                            <input type="date" name="request_date" class="form-control"
+                                value="{{ old('request_date', now()->toDateString()) }}" required>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Deskripsi (Opsional)</label>
+                            <textarea name="description" class="form-control" rows="2">{{ old('description') }}</textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="card-body">
-                {{-- Success Message --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle"></i> {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+            <!-- Tabel Detail Produk Request -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong class="w-100">Daftar Produk</strong>
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="button" onclick="addRow()" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Tambah Baris
                         </button>
                     </div>
-                @endif
-
-                {{-- Error Messages --}}
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle"></i> Terdapat kesalahan:
-                        <ul class="mb-0 mt-2">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
-
-                {{-- Form Header --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="info-box-content">
-                        <span class="info-box-text">
-                            <i class="fas fa-info-circle text-info"></i>
-                            Anda dapat menambahkan beberapa produk request sekaligus menggunakan form dinamis di bawah ini.
-                        </span>
-                    </div>
-                    <button type="button" onclick="addRow()" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Tambah Baris
-                    </button>
                 </div>
-
-                {{-- Dynamic Form --}}
-                <form action="{{ route('produk-request.store') }}" method="POST">
-                    @csrf
-                    <div id="form-container">
-                        {{-- Initial rows berdasarkan old input atau default --}}
-                        @php
-                            $oldData = old('produk_requests', [
-                                ['nama_produk' => '', 'harga_estimasi' => '', 'deskripsi' => '']
-                            ]);
-                        @endphp
-
-                        @foreach ($oldData as $index => $item)
-                            <div class="card card-outline card-primary mb-3 form-row" data-index="{{ $index }}">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-box"></i> Produk Request #{{ $index + 1 }}
-                                    </h3>
-                                    <div class="card-tools">
-                                        <button type="button"
-                                                onclick="removeRow(this)"
-                                                class="btn btn-tool text-danger"
-                                                title="Hapus baris ini">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="nama_produk_{{ $index }}">Nama Produk <span class="text-danger">*</span></label>
-                                                <input type="text"
-                                                       id="nama_produk_{{ $index }}"
-                                                       name="produk_requests[{{ $index }}][nama_produk]"
-                                                       class="form-control @error('produk_requests.'.$index.'.nama_produk') is-invalid @enderror"
-                                                       placeholder="Masukkan nama produk"
-                                                       value="{{ $item['nama_produk'] ?? '' }}"
-                                                       required>
-                                                @error('produk_requests.'.$index.'.nama_produk')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="harga_estimasi_{{ $index }}">Harga Estimasi <span class="text-danger">*</span></label>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width: 40%">Produk</th>
+                                    <th>Qty</th>
+                                    {{-- <th>Harga Estimasi</th> --}}
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                @if (old('produk_requests'))
+                                    @foreach (old('produk_requests') as $index => $produk)
+                                        <tr data-index="{{ $index }}">
+                                            <td>
                                                 <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Rp</span>
+                                                    <input type="text" name="produk_requests[{{ $index }}][name]"
+                                                        class="form-control item-name" placeholder="Scan barcode"
+                                                        value="{{ $produk['name'] ?? '' }}" readonly required>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-info scan-barcode"
+                                                            data-index="{{ $index }}">
+                                                            <i class="fas fa-barcode"></i>
+                                                        </button>
                                                     </div>
-                                                    <input type="number"
-                                                           id="harga_estimasi_{{ $index }}"
-                                                           name="produk_requests[{{ $index }}][harga_estimasi]"
-                                                           class="form-control @error('produk_requests.'.$index.'.harga_estimasi') is-invalid @enderror"
-                                                           placeholder="0"
-                                                           min="0"
-                                                           step="0.01"
-                                                           value="{{ $item['harga_estimasi'] ?? '' }}"
-                                                           required>
-                                                    @error('produk_requests.'.$index.'.harga_estimasi')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+                                                    <input type="hidden"
+                                                        name="produk_requests[{{ $index }}][item_id]" class="item-id"
+                                                        value="{{ $produk['item_id'] ?? '' }}">
                                                 </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="produk_requests[{{ $index }}][quantity]"
+                                                    class="form-control" value="{{ $produk['quantity'] ?? '' }}"
+                                                    min="0" step="1" required>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-sm btn-danger"
+                                                    onclick="removeRow(this)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr data-index="0">
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" name="produk_requests[0][name]"
+                                                    class="form-control item-name" placeholder="Scan barcode" readonly
+                                                    required>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-info scan-barcode"
+                                                        data-index="0"><i class="fas fa-barcode"></i></button>
+                                                </div>
+                                                <input type="hidden" name="produk_requests[0][item_id]" class="item-id">
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="deskripsi_{{ $index }}">Deskripsi (Opsional)</label>
-                                                <textarea name="produk_requests[{{ $index }}][deskripsi]"
-                                                          id="deskripsi_{{ $index }}"
-                                                          class="form-control @error('produk_requests.'.$index.'.deskripsi') is-invalid @enderror"
-                                                          placeholder="Deskripsi singkat produk"
-                                                          rows="3">{{ $item['deskripsi'] ?? '' }}</textarea>
-                                                @error('produk_requests.'.$index.'.deskripsi')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                                        </td>
+                                        <td><input type="number" name="produk_requests[0][quantity]" class="form-control"
+                                                min="0" step="1" required></td>
+                                        <!-- <td><input type="number" name="produk_requests[0][estimated_price]"
+                                                                class="form-control" min="0" step="0.01" required></td> -->
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
 
-                    {{-- Submit Button --}}
-                    <div class="card">
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('produk-request.index') }}" class="btn btn-secondary mr-2">
-                                    <i class="fas fa-times"></i> Batal
-                                </a>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Simpan Semua Request
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+            <!-- Tombol Simpan -->
+            <div class="mt-3 d-flex justify-content-end">
+                <a href="{{ route('produk-request.index') }}" class="btn btn-secondary mr-2">Batal</a>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Request</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Scan Barcode -->
+    <div class="modal fade" id="scanBarcodeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Scan Barcode</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <video id="barcode-video" width="100%" autoplay></video>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@stop
+@endsection
 
-@section('js')
-<script>
-let rowIndex = {{ count($oldData) }};
+@push('js')
+    <script>
+        let rowIndex = 1;
+        let scanTargetIndex = null;
 
-function addRow() {
-    const container = document.getElementById('form-container');
-    const newRow = document.createElement('div');
-    newRow.className = 'card card-outline card-primary mb-3 form-row';
-    newRow.setAttribute('data-index', rowIndex);
-
-    newRow.innerHTML = `
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-box"></i> Produk Request #${rowIndex + 1}
-            </h3>
-            <div class="card-tools">
-                <button type="button"
-                        onclick="removeRow(this)"
-                        class="btn btn-tool text-danger"
-                        title="Hapus baris ini">
-                    <i class="fas fa-trash"></i>
-                </button>
+        function addRow() {
+            const tbody = document.getElementById('table-body');
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-index', rowIndex);
+            tr.innerHTML = `
+        <td>
+            <div class="input-group">
+                <input type="text" name="produk_requests[${rowIndex}][name]" class="form-control item-name" placeholder="Scan barcode" readonly required>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-info scan-barcode" data-index="${rowIndex}">
+                        <i class="fas fa-barcode"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="produk_requests[${rowIndex}][item_id]" class="item-id">
             </div>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="nama_produk_${rowIndex}">Nama Produk <span class="text-danger">*</span></label>
-                        <input type="text"
-                               id="nama_produk_${rowIndex}"
-                               name="produk_requests[${rowIndex}][nama_produk]"
-                               class="form-control"
-                               placeholder="Masukkan nama produk"
-                               required>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="harga_estimasi_${rowIndex}">Harga Estimasi <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Rp</span>
-                            </div>
-                            <input type="number"
-                                   id="harga_estimasi_${rowIndex}"
-                                   name="produk_requests[${rowIndex}][harga_estimasi]"
-                                   class="form-control"
-                                   placeholder="0"
-                                   min="0"
-                                   step="0.01"
-                                   required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="deskripsi_${rowIndex}">Deskripsi (Opsional)</label>
-                        <textarea name="produk_requests[${rowIndex}][deskripsi]"
-                                  id="deskripsi_${rowIndex}"
-                                  class="form-control"
-                                  placeholder="Deskripsi singkat produk"
-                                  rows="3"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    container.appendChild(newRow);
-    rowIndex++;
-
-    // Focus pada input nama produk yang baru ditambahkan
-    newRow.querySelector('input[name*="nama_produk"]').focus();
-
-    // Update card titles
-    updateCardTitles();
-}
-
-function removeRow(button) {
-    const row = button.closest('.form-row');
-    const container = document.getElementById('form-container');
-
-    // Jangan hapus jika hanya ada satu baris
-    if (container.children.length <= 1) {
-        $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Peringatan',
-            subtitle: 'Sistem',
-            body: 'Minimal harus ada satu baris produk request.',
-            autohide: true,
-            delay: 3000
-        });
-        return;
-    }
-
-    row.remove();
-
-    // Reindex semua baris yang tersisa
-    reindexRows();
-    updateCardTitles();
-}
-
-function reindexRows() {
-    const rows = document.querySelectorAll('.form-row');
-    rows.forEach((row, index) => {
-        row.setAttribute('data-index', index);
-
-        // Update name attributes dan IDs
-        const inputs = row.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            const name = input.getAttribute('name');
-            const id = input.getAttribute('id');
-
-            if (name) {
-                const newName = name.replace(/\[\d+\]/, `[${index}]`);
-                input.setAttribute('name', newName);
-            }
-
-            if (id) {
-                const newId = id.replace(/_\d+$/, `_${index}`);
-                input.setAttribute('id', newId);
-            }
-        });
-
-        // Update label for attributes
-        const labels = row.querySelectorAll('label');
-        labels.forEach(label => {
-            const forAttr = label.getAttribute('for');
-            if (forAttr) {
-                const newFor = forAttr.replace(/_\d+$/, `_${index}`);
-                label.setAttribute('for', newFor);
-            }
-        });
-    });
-
-    rowIndex = rows.length;
-}
-
-function updateCardTitles() {
-    const rows = document.querySelectorAll('.form-row');
-    rows.forEach((row, index) => {
-        const title = row.querySelector('.card-title');
-        if (title) {
-            title.innerHTML = `<i class="fas fa-box"></i> Produk Request #${index + 1}`;
+        </td>
+        <td><input type="number" name="produk_requests[${rowIndex}][quantity]" class="form-control" min="0" step="0.01" required></td>
+        <!-- <td><input type="number" name="produk_requests[${rowIndex}][estimated_price]" class="form-control" min="0" step="0.01" required></td> -->
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>`;
+            tbody.appendChild(tr);
+            rowIndex++;
         }
-    });
-}
 
-// Auto-resize textarea
-document.addEventListener('input', function(e) {
-    if (e.target.tagName.toLowerCase() === 'textarea') {
-        e.target.style.height = 'auto';
-        e.target.style.height = (e.target.scrollHeight) + 'px';
-    }
-});
+        function removeRow(button) {
+            const row = button.closest('tr');
+            const totalRows = document.querySelectorAll('#table-body tr').length;
+            if (totalRows > 1) {
+                row.remove();
+            } else {
+                alert('Minimal 1 produk request');
+            }
+        }
 
-// Initialize tooltips
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-});
-</script>
-@stop
+        $(document).on('click', '.scan-barcode', function() {
+            scanTargetIndex = $(this).data('index');
+            $('#scanBarcodeModal').modal('show');
+            startScan();
+        });
 
-@section('css')
-<style>
-.form-row {
-    transition: all 0.3s ease;
-}
+        function startScan() {
+            const video = document.getElementById('barcode-video');
+            navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment'
+                    }
+                })
+                .then(stream => {
+                    video.srcObject = stream;
+                    const detector = new BarcodeDetector();
+                    const interval = setInterval(() => {
+                        detector.detect(video).then(codes => {
+                            if (codes.length > 0) {
+                                const code = codes[0].rawValue;
+                                clearInterval(interval);
+                                stream.getTracks().forEach(t => t.stop());
+                                $('#scanBarcodeModal').modal('hide');
 
-.form-row:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+                                fetch(`/items/search-by-barcode/${code}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Check if the item already exists in the table
+                                            const existingRow = document.querySelector(
+                                                `tr .item-id[value="${data.item.id}"]`
+                                            );
+                                            console.log(existingRow);
+                                            if (existingRow) {
+                                                alert('Item sudah ada di daftar produk!');
+                                                return;
+                                            }
 
-.info-box-content {
-    background: #f8f9fa;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border-left: 4px solid #17a2b8;
-}
+                                            const row = document.querySelector(
+                                                `tr[data-index="${scanTargetIndex}"]`);
+                                            row.querySelector('.item-name').value = data.item.name;
+                                            row.querySelector('.item-id').value = data.item.id;
+                                        } else {
+                                            alert('Item tidak ditemukan!');
+                                        }
+                                    });
+                            }
+                        });
+                    }, 1000);
+                })
+                .catch(err => alert('Tidak bisa akses kamera: ' + err));
+        }
 
-.info-box-text {
-    color: #495057;
-    font-size: 0.9rem;
-}
-
-.card-outline.card-primary {
-    border-top: 3px solid #007bff;
-}
-
-.btn-tool:hover {
-    background: transparent !important;
-}
-
-.gap-2 > * {
-    margin-right: 0.5rem;
-}
-
-.gap-2 > *:last-child {
-    margin-right: 0;
-}
-</style>
-@stop
+        $('#scanBarcodeModal').on('hidden.bs.modal', () => {
+            const video = document.getElementById('barcode-video');
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+            }
+        });
+    </script>
+@endpush

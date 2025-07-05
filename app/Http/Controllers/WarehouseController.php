@@ -12,7 +12,7 @@ class WarehouseController extends Controller
      */
     public function index(Request $request)
     {
-        $warehouses = Warehouse::latest()->paginate(10);
+        $warehouses = Warehouse::latest()->search($request->input('search'))->paginate(10);
 
         return view('pages.warehouses.index', compact('warehouses'));
     }
