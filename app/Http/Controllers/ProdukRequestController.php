@@ -73,7 +73,10 @@ class ProdukRequestController extends Controller
         }
 
         // Generate next request number
-        $requestNumber = sprintf('RQ-%04d', intval(ProdukRequest::max('id') ?? '0') + 1);
+        $currentMax = ProdukRequest::withTrashed()->max('id') ?? 0; // Get the current max ID or 0 if no records exist
+        // Increment by 1 to get the next request number
+        $currentMax += 1;
+        $requestNumber = sprintf('RQ-%04d', $currentMax);
         $request->merge([
             'request_number' => $requestNumber,
             'user_id' => Auth::id(), // Assuming you have user authentication
@@ -97,6 +100,9 @@ class ProdukRequestController extends Controller
             if (!$success) {
                 throw new \Exception('Gagal menambahkan detail produk request.');
             }
+
+            // Commit the transaction
+            DB::commit();
 
             return redirect()->route('produk-request.index')
                 ->with('success', 'Produk request berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');

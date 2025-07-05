@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProdukRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const STATUS_PENDING = 'pending';
     const STATUS_APPROVED = 'approved';
@@ -16,15 +17,14 @@ class ProdukRequest extends Model
     protected $fillable = [
         'request_number',
         'request_date',
-        'estimated_price',
         'description',
         'status',
-        'admin_notes',
         'user_id',
     ];
 
     protected $casts = [
-        'estimated_price' => 'decimal:2',
+        'request_date' => 'datetime',
+        'status' => 'string',
     ];
 
     /**

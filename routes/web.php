@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     // Produk Request Routes
     Route::resource('produk-request', ProdukRequestController::class)->except(['show']);
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
-        Route::patch('/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
+        Route::match(['PUT', 'PATCH'], '/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
     });
 
     // Warehouse
@@ -59,9 +59,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');
     Route::get('/items/{item}/barcode', [ItemController::class, 'generateBarcode'])->name('items.barcode');
     Route::post('/items/check-code', [ItemController::class, 'checkCode'])->name('items.check-code');
-
-    // Requests (for item requests)
-    Route::resource('requests', RequestController::class)->except(['update', 'edit']);
-    Route::patch('/requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
-    Route::patch('/requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
 });
