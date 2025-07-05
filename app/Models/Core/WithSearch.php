@@ -16,8 +16,21 @@ trait WithSearch
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $searchable = $this->searchable ?? [];
+
                 foreach ($searchable as $field) {
-                    $q->orWhere($field, 'like', '%'.$search.'%');
+                    if (strpos($field, '.') !== false) {
+                        // Handle relational fields like 'category.name'
+                        $parts = explode('.', $field);
+                        $relation = $parts[0];
+                        $relatedField = $parts[1];
+
+                        $q->orWhereHas($relation, function ($query) use ($relatedField, $search) {
+                            $query->where($relatedField, 'like', '%' . $search . '%');
+                        });
+                    } else {
+                        // Handle direct model fields
+                        $q->orWhere($field, 'like', '%' . $search . '%');
+                    }
                 }
             });
         }
