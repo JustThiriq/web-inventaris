@@ -11,7 +11,6 @@ class Warehouse extends Model
 {
     use HasFactory, SoftDeletes, WithSearch;
 
-
     protected $searchable = [
         'name',
         'location',

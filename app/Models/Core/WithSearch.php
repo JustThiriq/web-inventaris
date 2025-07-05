@@ -25,11 +25,11 @@ trait WithSearch
                         $relatedField = $parts[1];
 
                         $q->orWhereHas($relation, function ($query) use ($relatedField, $search) {
-                            $query->where($relatedField, 'like', '%' . $search . '%');
+                            $query->where($relatedField, 'like', '%'.$search.'%');
                         });
                     } else {
                         // Handle direct model fields
-                        $q->orWhere($field, 'like', '%' . $search . '%');
+                        $q->orWhere($field, 'like', '%'.$search.'%');
                     }
                 }
             });

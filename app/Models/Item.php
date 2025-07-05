@@ -60,13 +60,13 @@ class Item extends Model
         'current_stock',
     ];
 
-
     private function randomDigits($length = 9)
     {
         $digits = '';
         for ($i = 0; $i < $length; $i++) {
             $digits .= rand(0, 9);
         }
+
         return $digits;
     }
 
@@ -82,7 +82,6 @@ class Item extends Model
             $item->barcode = $code;
         });
     }
-
 
     public function scopeActive($query)
     {
@@ -141,26 +140,25 @@ class Item extends Model
         }
     }
 
-
     public function getBarcodeUrlAttribute()
     {
         // Check folder existence
         $barcodeDir = public_path('barcodes');
-        if (!file_exists($barcodeDir)) {
+        if (! file_exists($barcodeDir)) {
             mkdir($barcodeDir, 0755, true);
         }
 
         // Check if barcode file exists
-        $barcodePath = public_path('barcodes/' . $this->barcode . '.png');
+        $barcodePath = public_path('barcodes/'.$this->barcode.'.png');
         if (file_exists($barcodePath)) {
-            return asset('barcodes/' . $this->barcode . '.png');
+            return asset('barcodes/'.$this->barcode.'.png');
         }
 
         // Generate barcode if it doesn't exist
-        $barcodeGenerator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcodeGenerator = new \Picqer\Barcode\BarcodeGeneratorPNG;
         $barcodeImage = $barcodeGenerator->getBarcode($this->barcode, $barcodeGenerator::TYPE_CODE_128);
         file_put_contents($barcodePath, $barcodeImage);
 
-        return asset('barcodes/' . $this->barcode . '.png');
+        return asset('barcodes/'.$this->barcode.'.png');
     }
 }

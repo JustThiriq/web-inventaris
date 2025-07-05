@@ -43,7 +43,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/items/{item}/print-barcode', [ItemController::class, 'printBarcode'])->name('items.print-barcode');
     Route::get('/items/search-by-barcode/{code}', [ItemController::class, 'searchByBarcode'])->name('items.search-by-barcode');
 
-
     // Categories
     Route::resource('categories', CategoryController::class)->except(['show']);
 
