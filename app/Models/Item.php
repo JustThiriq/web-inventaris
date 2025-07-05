@@ -51,6 +51,30 @@ class Item extends Model
         'current_stock',
     ];
 
+
+    private function randomDigits($length = 9)
+    {
+        $digits = '';
+        for ($i = 0; $i < $length; $i++) {
+            $digits .= rand(0, 9);
+        }
+        return $digits;
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($item) {
+            $code = strtoupper($item->randomDigits(15));
+
+            while (self::where('barcode', $code)->exists()) {
+                $code = strtoupper($item->randomDigits(15));
+            }
+
+            $item->barcode = $code;
+        });
+    }
+
+
     public function scopeActive($query)
     {
         // where category_id is not deleted
@@ -74,5 +98,60 @@ class Item extends Model
     public function item_requests()
     {
         return $this->hasMany(ItemRequest::class);
+    }
+
+    public function getCurrentStokAttribute()
+    {
+        return $this->current_stock ?? 0;
+    }
+
+    public function getMinStokAttribute()
+    {
+        return $this->min_stock ?? 0;
+    }
+
+    public function getBadgeLevelAttribute()
+    {
+        if ($this->currentStok <= $this->minStok) {
+            return 'badge-danger';
+        } elseif ($this->currentStok <= $this->minStok * 2) {
+            return 'badge-warning';
+        } else {
+            return 'badge-success';
+        }
+    }
+
+    public function getBadgeLabelAttribute()
+    {
+        if ($this->currentStok <= $this->minStok) {
+            return 'Stok Rendah';
+        } elseif ($this->currentStok <= $this->minStok * 2) {
+            return 'Stok Cukup';
+        } else {
+            return 'Stok Aman';
+        }
+    }
+
+
+    public function getBarcodeUrlAttribute()
+    {
+        // Check folder existence
+        $barcodeDir = public_path('barcodes');
+        if (!file_exists($barcodeDir)) {
+            mkdir($barcodeDir, 0755, true);
+        }
+
+        // Check if barcode file exists
+        $barcodePath = public_path('barcodes/' . $this->barcode . '.png');
+        if (file_exists($barcodePath)) {
+            return asset('barcodes/' . $this->barcode . '.png');
+        }
+
+        // Generate barcode if it doesn't exist
+        $barcodeGenerator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcodeImage = $barcodeGenerator->getBarcode($this->barcode, $barcodeGenerator::TYPE_CODE_128);
+        file_put_contents($barcodePath, $barcodeImage);
+
+        return asset('barcodes/' . $this->barcode . '.png');
     }
 }
