@@ -19,6 +19,11 @@
                     <div class="card-body">
                         @include('components.flash-message')
 
+                        @include('components.searchable', [
+                            'route' => 'warehouses.index',
+                            'placeholder' => 'Cari nama gudang, lokasi, atau manager...',
+                        ])
+
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead class="thead-dark">
