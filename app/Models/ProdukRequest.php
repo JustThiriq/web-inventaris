@@ -9,17 +9,22 @@ class ProdukRequest extends Model
 {
     use HasFactory;
 
+    const STATUS_PENDING = 'pending';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REJECTED = 'rejected';
+
     protected $fillable = [
-        'nama_produk',
-        'harga_estimasi',
-        'deskripsi',
+        'request_number',
+        'request_date',
+        'estimated_price',
+        'description',
         'status',
-        'catatan_admin',
+        'admin_notes',
         'user_id',
     ];
 
     protected $casts = [
-        'harga_estimasi' => 'decimal:2',
+        'estimated_price' => 'decimal:2',
     ];
 
     /**
@@ -35,7 +40,7 @@ class ProdukRequest extends Model
      */
     public function scopePending($query)
     {
-        return $query->where('status', 'pending');
+        return $query->where('status', self::STATUS_PENDING);
     }
 
     /**
@@ -43,7 +48,7 @@ class ProdukRequest extends Model
      */
     public function scopeApproved($query)
     {
-        return $query->where('status', 'approved');
+        return $query->where('status', self::STATUS_APPROVED);
     }
 
     /**
@@ -51,7 +56,7 @@ class ProdukRequest extends Model
      */
     public function scopeRejected($query)
     {
-        return $query->where('status', 'rejected');
+        return $query->where('status', self::STATUS_REJECTED);
     }
 
     /**
@@ -60,11 +65,16 @@ class ProdukRequest extends Model
     public function getStatusBadgeAttribute()
     {
         $badges = [
-            'pending' => '<span class="px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full">Pending</span>',
-            'approved' => '<span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Approved</span>',
-            'rejected' => '<span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded-full">Rejected</span>',
+            self::STATUS_PENDING => '<span class="px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full">Pending</span>',
+            self::STATUS_APPROVED => '<span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Approved</span>',
+            self::STATUS_REJECTED => '<span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded-full">Rejected</span>',
         ];
 
-        return $badges[$this->status] ?? $badges['pending'];
+        return $badges[$this->status] ?? $badges[self::STATUS_PENDING];
+    }
+
+    public function details()
+    {
+        return $this->hasMany(ProductRequestDetail::class, 'produk_request_id');
     }
 }
