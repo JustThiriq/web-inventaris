@@ -123,6 +123,12 @@
 
                                             <td>
                                                 <div class="btn-group" role="group">
+                                                    {{-- print barcode --}}
+                                                    <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
+                                                        class="btn btn-primary btn-sm" title="Print Barcode">
+                                                        <i class="fas fa-print"></i>
+                                                    </a>
+
                                                     <a href="{{ route('items.edit', $item) }}"
                                                         class="btn btn-warning btn-sm" title="Edit">
                                                         <i class="fas fa-edit"></i>

@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
     // Items - Add these routes
     Route::resource('items', ItemController::class)->except(['show']);
     Route::patch('/items/{item}/activate', [ItemController::class, 'activate'])->name('items.activate');
+    Route::get('/items/{item}/print-barcode', [ItemController::class, 'printBarcode'])->name('items.print-barcode');
+
 
     // Categories
     Route::resource('categories', CategoryController::class)->except(['show']);

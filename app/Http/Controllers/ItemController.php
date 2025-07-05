@@ -62,6 +62,14 @@ class ItemController extends Controller
         return view('pages.items.index', compact('items', 'categories', 'warehouses'));
     }
 
+    public function printBarcode(Item $item)
+    {
+        // Load relationships defined in the model
+        $item->load(['category', 'warehouse']);
+
+        return view('pages.items.print-barcode', compact('item'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
