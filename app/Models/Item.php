@@ -103,10 +103,10 @@ class Item extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function item_requests()
-    {
-        return $this->hasMany(ItemRequest::class);
-    }
+    // public function item_requests()
+    // {
+    //     return $this->hasMany(ItemRequest::class);
+    // }
 
     public function getCurrentStokAttribute()
     {

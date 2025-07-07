@@ -22,7 +22,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string|null $deleted_at
- * @property Collection|ItemRequest[] $item_requests
  */
 class User extends Authenticatable
 {
@@ -45,10 +44,10 @@ class User extends Authenticatable
         'phone',
     ];
 
-    public function item_requests()
-    {
-        return $this->hasMany(ItemRequest::class);
-    }
+    // public function item_requests()
+    // {
+    //     return $this->hasMany(ItemRequest::class);
+    // }
 
     public function role()
     {
