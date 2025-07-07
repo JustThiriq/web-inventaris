@@ -33,9 +33,9 @@
                                 <div class="col-md-3">
                                     <strong>Terakhir Update:</strong> {{ $item->updated_at->format('d/m/Y H:i') }}
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <strong>Total Request:</strong> {{ $item->item_requests->count() }} request
-                                </div>
+                                </div> --}}
                                 <div class="col-md-3">
                                     <strong>Status Stok:</strong>
                                     <span class="badge {{ $item->badgeLevel }}">{{ $item->badgeLabel }}</span>
