@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('warehouses', WarehouseController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation
-    Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');
+    Route::get('/api/items', [ItemController::class, 'apiSearch'])->name('items.api');
     Route::get('/items/{item}/barcode', [ItemController::class, 'generateBarcode'])->name('items.barcode');
     Route::post('/items/check-code', [ItemController::class, 'checkCode'])->name('items.check-code');
 });

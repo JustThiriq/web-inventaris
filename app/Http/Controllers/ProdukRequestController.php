@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\ProdukRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -199,6 +200,7 @@ class ProdukRequestController extends Controller
                 ->withInput();
         }
 
+        DB::beginTransaction();
         try {
             $produkRequest->update([
                 'status' => $request->status,
@@ -206,6 +208,7 @@ class ProdukRequestController extends Controller
             ]);
 
             if ($request->expectsJson()) {
+                DB::rollBack();
                 return response()->json([
                     'success' => true,
                     'message' => 'Status berhasil diupdate!',
@@ -213,9 +216,23 @@ class ProdukRequestController extends Controller
                 ]);
             }
 
+            // get details
+            $details = $produkRequest->details;
+            foreach ($details as $detail) {
+                // decrement stock
+                $product = Item::find($detail->item_id);
+                if ($product) {
+                    if ($request->status === 'approved') {
+                        $product->decrementStock($detail->quantity);
+                    }
+                }
+            }
+
+            DB::commit();
             return redirect()->route('produk-request.index')
                 ->with('success', 'Status produk request berhasil diperbarui.');
         } catch (\Exception $e) {
+            DB::rollBack();
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
             }

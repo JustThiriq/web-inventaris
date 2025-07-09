@@ -161,4 +161,19 @@ class Item extends Model
 
         return asset('barcodes/'.$this->barcode.'.png');
     }
+
+    public function decrementStock($amount)
+    {
+        // Ensure current_stock is not null
+        if ($this->current_stock === null) {
+            $this->current_stock = 0;
+        }
+
+        // Decrement the stock
+        $this->current_stock -= $amount;
+
+        // Save the changes
+        return $this->save();
+    }
+
 }

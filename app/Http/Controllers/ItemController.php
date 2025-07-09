@@ -9,13 +9,9 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        $query = Item::active()->with(['category', 'warehouse']);
 
+    protected function _searchable($query, $request)
+    {
         // Filter by category_id
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
@@ -49,6 +45,15 @@ class ItemController extends Controller
                     break;
             }
         }
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $query = Item::active()->with(['category', 'warehouse']);
+        $this->_searchable($query, $request);
 
         $items = $query->latest()->paginate(10);
 
@@ -57,6 +62,16 @@ class ItemController extends Controller
         $warehouses = Warehouse::all();
 
         return view('pages.items.index', compact('items', 'categories', 'warehouses'));
+    }
+
+    public function apiSearch(Request $request)
+    {
+        $query = Item::active()->with(['category', 'warehouse']);
+        $this->_searchable($query, $request);
+
+        $items = $query->latest()->limit(10)->get();
+
+        return response()->json($items);
     }
 
     public function searchByBarcode($code)
@@ -144,11 +159,11 @@ class ItemController extends Controller
     public function update(Request $request, Item $item)
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:items,code,'.$item->id,
+            'code' => 'required|string|max:255|unique:items,code,' . $item->id,
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
-            'barcode' => 'nullable|string|max:255|unique:items,barcode,'.$item->id,
+            'barcode' => 'nullable|string|max:255|unique:items,barcode,' . $item->id,
             'min_stock' => 'nullable|integer|min:0',
             'current_stock' => 'nullable|integer|min:0',
         ]);
