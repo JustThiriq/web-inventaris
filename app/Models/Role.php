@@ -26,4 +26,9 @@ class Role extends Model
         'slug',
         'name',
     ];
+
+    public function isAdmin()
+    {
+        return $this->slug === 'admin';
+    }
 }

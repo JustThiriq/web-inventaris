@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Manajemen Kategori')
+@section('title', 'Manajemen Jenis')
 
 @section('content')
     <div class="container-fluid">
@@ -33,7 +33,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama Kategori</th>
+                                        <th>Nama Jenis</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -55,7 +55,7 @@
                                                         @method('DELETE')
                                                     </form>
                                                     <button type="submit" class="btn btn-danger btn-sm" title="Hapus"
-                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus kategori ini?')) { document.getElementById('delete-form-{{ $category->id }}').submit(); }">
+                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus Jenis ini?')) { document.getElementById('delete-form-{{ $category->id }}').submit(); }">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -63,7 +63,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center">Tidak ada data kategori.</td>
+                                            <td colspan="5" class="text-center">Tidak ada data Jenis.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

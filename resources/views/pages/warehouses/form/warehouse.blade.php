@@ -1,19 +1,19 @@
 <!-- Warehouse Name -->
 <div class="form-group">
-    <label for="name">Nama Gudang <span class="text-danger">*</span></label>
+    <label for="name">Nama Lokasi Rak <span class="text-danger">*</span></label>
     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-        value="{{ old('name', isset($warehouse) ? $warehouse->name : '') }}" placeholder="Masukkan nama gudang" required>
+        value="{{ old('name', isset($warehouse) ? $warehouse->name : '') }}" placeholder="Masukkan nama Lokasi Rak" required>
     @error('name')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-    <small class="form-text text-muted">Nama harus unik untuk setiap gudang</small>
+    <small class="form-text text-muted">Nama harus unik untuk setiap Lokasi Rak</small>
 </div>
 
 <!-- Location -->
 <div class="form-group">
     <label for="location">Lokasi <span class="text-danger">*</span></label>
     <textarea class="form-control @error('location') is-invalid @enderror" id="location" name="location" rows="3"
-        placeholder="Masukkan alamat lokasi gudang" required>{{ old('location', isset($warehouse) ? $warehouse->location : '') }}</textarea>
+        placeholder="Masukkan alamat lokasi Lokasi Rak" required>{{ old('location', isset($warehouse) ? $warehouse->location : '') }}</textarea>
     @error('location')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror

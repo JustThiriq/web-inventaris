@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Manajemen Gudang')
+@section('title', 'Manajemen Lokasi Rak')
 
 @section('content')
     <div class="container-fluid">
@@ -9,9 +9,9 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">Manajemen Gudang</h4>
+                            <h4 class="mb-0">Manajemen Lokasi Rak</h4>
                             <a href="{{ route('warehouses.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Gudang
+                                <i class="fas fa-plus"></i> Tambah Lokasi Rak
                             </a>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
 
                         @include('components.searchable', [
                             'route' => 'warehouses.index',
-                            'placeholder' => 'Cari nama gudang, lokasi, atau manager...',
+                            'placeholder' => 'Cari nama Lokasi Rak, lokasi, atau manager...',
                         ])
 
                         <div class="table-responsive">
@@ -29,7 +29,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama Gudang</th>
+                                        <th>Nama Lokasi Rak</th>
                                         <th>Lokasi</th>
                                         <th>Manager</th>
                                         <th>Kontak</th>
@@ -59,7 +59,7 @@
                                                         @method('DELETE')
                                                     </form>
                                                     <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus gudang ini?')) {
+                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus Lokasi Rak ini?')) {
                                                             document.getElementById('delete-form-{{ $warehouse->id }}').submit();
                                                         }">
                                                         <i class="fas fa-trash"></i>
@@ -71,7 +71,7 @@
                                         <tr>
                                             <td colspan="7" class="text-center py-4">
                                                 <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
-                                                <br>Tidak ada data gudang
+                                                <br>Tidak ada data Lokasi Rak
                                             </td>
                                         </tr>
                                     @endforelse

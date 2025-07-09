@@ -68,6 +68,11 @@
                                                         class="form-control item-name" placeholder="Scan barcode"
                                                         value="{{ $produk['name'] ?? '' }}" readonly required>
                                                     <div class="input-group-append">
+
+                                                        <button type="button" class="btn btn-secondary select-product"
+                                                            data-index="{{ $index }}">
+                                                            <i class="fas fa-search"></i>
+                                                        </button>
                                                         <button type="button" class="btn btn-info scan-barcode"
                                                             data-index="{{ $index }}">
                                                             <i class="fas fa-barcode"></i>
@@ -101,6 +106,10 @@
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-info scan-barcode"
                                                         data-index="0"><i class="fas fa-barcode"></i></button>
+                                                    <button type="button" class="btn btn-secondary select-product"
+                                                        data-index="0">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
                                                 </div>
                                                 <input type="hidden" name="produk_requests[0][item_id]" class="item-id">
                                             </div>
@@ -108,7 +117,7 @@
                                         <td><input type="number" name="produk_requests[0][quantity]" class="form-control"
                                                 min="0" step="1" required></td>
                                         <!-- <td><input type="number" name="produk_requests[0][estimated_price]"
-                                                                class="form-control" min="0" step="0.01" required></td> -->
+                                                                                                                        class="form-control" min="0" step="0.01" required></td> -->
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
                                                 <i class="fas fa-trash"></i>
@@ -144,9 +153,73 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Pilih Manual -->
+    <div class="modal fade" id="selectProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pilih Produk Manual</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <select id="product-selector" style="width: 100%"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('js')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        let currentSelectIndex = null;
+
+        // Trigger modal pilih produk
+        $(document).on('click', '.select-product', function() {
+            currentSelectIndex = $(this).data('index');
+            $('#product-selector').val(null).trigger('change');
+            $('#selectProductModal').modal('show');
+        });
+
+        // Init select2
+        $('#product-selector').select2({
+            placeholder: 'Cari produk...',
+            ajax: {
+                url: '{{ route('items.api') }}',
+                dataType: 'json',
+                delay: 250,
+                processResults: function(data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.id,
+                            text: item.name
+                        }))
+                    };
+                },
+            },
+            dropdownParent: $('#selectProductModal')
+        });
+
+        // Ketika produk dipilih dari Select2
+        $('#product-selector').on('select2:select', function(e) {
+            const selected = e.params.data;
+            const row = document.querySelector(`tr[data-index="${currentSelectIndex}"]`);
+            const isDuplicate = document.querySelector(`tr .item-id[value="${selected.id}"]`);
+
+            if (isDuplicate) {
+                alert('Item sudah ada di daftar produk!');
+                return;
+            }
+
+            row.querySelector('.item-name').value = selected.text;
+            row.querySelector('.item-id').value = selected.id;
+
+            $('#selectProductModal').modal('hide');
+        });
+    </script>
     <script>
         let rowIndex = 1;
         let scanTargetIndex = null;
@@ -162,6 +235,10 @@
                 <div class="input-group-append">
                     <button type="button" class="btn btn-info scan-barcode" data-index="${rowIndex}">
                         <i class="fas fa-barcode"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary select-product"
+                        data-index="${rowIndex}">
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
                 <input type="hidden" name="produk_requests[${rowIndex}][item_id]" class="item-id">

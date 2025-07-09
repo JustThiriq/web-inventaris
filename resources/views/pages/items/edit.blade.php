@@ -246,10 +246,10 @@
                     $('#preview_barcode').text($('#barcode').val() || '-');
 
                     let categoryText = $('#category_id option:selected').text();
-                    $('#preview_category').text(categoryText === 'Pilih Kategori' ? '-' : categoryText);
+                    $('#preview_category').text(categoryText === 'Pilih Jenis' ? '-' : categoryText);
 
                     let warehouseText = $('#warehouse_id option:selected').text();
-                    $('#preview_warehouse').text(warehouseText === 'Pilih Gudang' ? '-' : warehouseText);
+                    $('#preview_warehouse').text(warehouseText === 'Pilih Lokasi Rak' ? '-' : warehouseText);
 
                     $('#preview_min_stock').text($('#min_stock').val() || '0');
                     $('#preview_current_stock').text($('#current_stock').val() || '0');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
 use App\Http\Controllers\RequestController;
@@ -21,7 +22,7 @@ Route::get('/', function () {
 });
 
 // Authentication Routes
-Auth::routes();
+Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
@@ -51,12 +52,13 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
         Route::match(['PUT', 'PATCH'], '/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
     });
+    Route::get('/history', [HistoryController::class, 'index'])->name('produk-request.history');
 
     // Warehouse
     Route::resource('warehouses', WarehouseController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation
-    Route::get('/api/items', [ItemController::class, 'getData'])->name('items.api');
+    Route::get('/api/items', [ItemController::class, 'apiSearch'])->name('items.api');
     Route::get('/items/{item}/barcode', [ItemController::class, 'generateBarcode'])->name('items.barcode');
     Route::post('/items/check-code', [ItemController::class, 'checkCode'])->name('items.check-code');
 });

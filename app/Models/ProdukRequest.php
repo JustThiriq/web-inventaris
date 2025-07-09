@@ -2,17 +2,25 @@
 
 namespace App\Models;
 
+use App\Models\Core\WithSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProdukRequest extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, WithSearch;
 
     const STATUS_PENDING = 'pending';
     const STATUS_APPROVED = 'approved';
     const STATUS_REJECTED = 'rejected';
+
+
+    protected $searchable = [
+        'request_number',
+        'description',
+    ];
+
 
     protected $fillable = [
         'request_number',
@@ -57,6 +65,14 @@ class ProdukRequest extends Model
     public function scopeRejected($query)
     {
         return $query->where('status', self::STATUS_REJECTED);
+    }
+
+    /**
+     * Scope untuk bukan pending
+     */
+    public function scopeNotPending($query)
+    {
+        return $query->where('status', '!=', self::STATUS_PENDING);
     }
 
     /**

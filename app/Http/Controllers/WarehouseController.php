@@ -45,7 +45,7 @@ class WarehouseController extends Controller
         Warehouse::create($validated);
 
         return redirect()->route('warehouses.index')
-            ->with('success', 'Gudang berhasil ditambahkan.');
+            ->with('success', 'Lokasi Rak berhasil ditambahkan.');
     }
 
     /**
@@ -75,7 +75,7 @@ class WarehouseController extends Controller
         $warehouse->update($validated);
 
         return redirect()->route('warehouses.index')
-            ->with('success', 'Gudang berhasil diperbarui.');
+            ->with('success', 'Lokasi Rak berhasil diperbarui.');
     }
 
     /**
@@ -86,6 +86,6 @@ class WarehouseController extends Controller
         $warehouse->delete();
 
         return redirect()->route('warehouses.index')
-            ->with('success', 'Gudang berhasil dihapus.');
+            ->with('success', 'Lokasi Rak berhasil dihapus.');
     }
 }
