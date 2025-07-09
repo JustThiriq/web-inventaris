@@ -17,7 +17,7 @@ return [
     'title' => 'web-inventaris',
     'title_prefix' => '',
     'title_postfix' => '',
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>WEB</b>INVENTARIS',
     'logo_img' => 'adminlte/dist/img/AdminLTELogo.png',
 
     /*
@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>WEB</b>INVENTARIS',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -262,9 +262,9 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'register_url' => false,
+    'password_reset_url' => false,
+    'password_email_url' => false,
     'profile_url' => false,
     'disable_darkmode_routes' => false,
 

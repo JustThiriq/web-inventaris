@@ -21,7 +21,7 @@ Route::get('/', function () {
 });
 
 // Authentication Routes
-Auth::routes();
+Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
