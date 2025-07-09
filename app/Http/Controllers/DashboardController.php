@@ -33,14 +33,14 @@ class DashboardController extends Controller
                 'link' => route('produk-request.index'),
             ],
             [
-                'text' => 'Kategori Produk',
+                'text' => 'Jenis Produk',
                 'count' => $category,
                 'icon' => 'fas fa-tags',
                 'color' => 'bg-success',
                 'link' => route('categories.index'),
             ],
             [
-                'text' => 'Gudang Tersedia',
+                'text' => 'Lokasi Rak Tersedia',
                 'count' => $warehouse,
                 'icon' => 'fas fa-warehouse',
                 'color' => 'bg-danger',

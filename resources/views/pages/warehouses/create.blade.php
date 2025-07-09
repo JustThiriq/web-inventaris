@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Tambah Gudang')
+@section('title', 'Tambah Lokasi Rak')
 
 @section('content')
     <div class="container-fluid">
@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                <i class="fas fa-plus"></i> Tambah Gudang Baru
+                                <i class="fas fa-plus"></i> Tambah Lokasi Rak Baru
                             </h4>
                             <a href="{{ route('warehouses.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Kembali
@@ -28,7 +28,7 @@
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5 class="mb-0">Informasi Gudang</h5>
+                                            <h5 class="mb-0">Informasi Lokasi Rak</h5>
                                         </div>
                                         <div class="card-body">
                                             @include('pages.warehouses.form.warehouse', [
@@ -59,7 +59,7 @@
                                                 <i class="fas fa-times"></i> Batal
                                             </a>
                                             <button type="submit" class="btn btn-primary bg-success">
-                                                <i class="fas fa-save"></i> Tambah Gudang
+                                                <i class="fas fa-save"></i> Tambah Lokasi Rak
                                             </button>
                                         </div>
                                     </div>
@@ -93,17 +93,17 @@
 
                 // Add category placeholder
                 $('#addCategory').click(function() {
-                    let categoryName = prompt('Masukkan nama kategori baru:');
+                    let categoryName = prompt('Masukkan nama Jenis baru:');
                     if (categoryName) {
-                        alert('Fitur tambah kategori akan segera tersedia!\nKategori: ' + categoryName);
+                        alert('Fitur tambah Jenis akan segera tersedia!\nJenis: ' + categoryName);
                     }
                 });
 
                 // Add warehouse placeholder
                 $('#addWarehouse').click(function() {
-                    let warehouseName = prompt('Masukkan nama gudang baru:');
+                    let warehouseName = prompt('Masukkan nama Lokasi Rak baru:');
                     if (warehouseName) {
-                        alert('Fitur tambah gudang akan segera tersedia!\nGudang: ' + warehouseName);
+                        alert('Fitur tambah Lokasi Rak akan segera tersedia!\nLokasi Rak: ' + warehouseName);
                     }
                 });
 
@@ -143,10 +143,10 @@
                     $('#preview_barcode').text($('#barcode').val() || '-');
 
                     let categoryText = $('#category_id option:selected').text();
-                    $('#preview_category').text(categoryText === 'Pilih Kategori' ? '-' : categoryText);
+                    $('#preview_category').text(categoryText === 'Pilih Jenis' ? '-' : categoryText);
 
                     let warehouseText = $('#warehouse_id option:selected').text();
-                    $('#preview_warehouse').text(warehouseText === 'Pilih Gudang' ? '-' : warehouseText);
+                    $('#preview_warehouse').text(warehouseText === 'Pilih Lokasi Rak' ? '-' : warehouseText);
 
                     $('#preview_min_stock').text($('#min_stock').val() || '0');
                     $('#preview_current_stock').text($('#current_stock').val() || '0');

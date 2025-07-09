@@ -30,7 +30,7 @@
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <select name="category_id" id="categoryFilter" class="form-control">
-                                    <option value="">Semua Kategori</option>
+                                    <option value="">Semua Jenis</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="col-md-3">
                                 <select name="warehouse_id" id="warehouseFilter" class="form-control">
-                                    <option value="">Semua Gudang</option>
+                                    <option value="">Semua Lokasi Rak</option>
                                     @foreach ($warehouses as $warehouse)
                                         <option value="{{ $warehouse->id }}"
                                             {{ request('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
@@ -85,9 +85,10 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th style="min-width: 10px">#</th>
-                                        <th style="min-width: 150px">Item</th>
-                                        <th style="min-width: 150px">Kategori</th>
-                                        <th style="min-width: 150px">Gudang</th>
+                                        <th style="min-width: 150px">Stokcode</th>
+                                        <th style="min-width: 150px">Deskripsi</th>
+                                        <th style="min-width: 150px">Jenis</th>
+                                        <th style="min-width: 150px">Lokasi Rak</th>
                                         <th style="min-width: 150px">Barcode</th>
                                         <th style="min-width: 150px">Stok</th>
                                         <th style="min-width: 150px">Aksi</th>
@@ -99,9 +100,10 @@
                                             <td>{{ $loop->iteration + ($items->currentPage() - 1) * $items->perPage() }}
                                             </td>
                                             <td>
-                                                {{ $item->name }}
-                                                <br />
                                                 <strong>{{ $item->code }}</strong>
+                                            </td>
+                                            <td>
+                                                {{ $item->name }}
                                             </td>
                                             <td>
                                                 @if ($item->category)
@@ -130,6 +132,16 @@
 
                                             <td>
                                                 <div class="btn-group" role="group">
+
+                                                    <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
+                                                        class="btn btn-info btn-sm" title="Lihat Detail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+
+                                                    <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
+                                                        class="btn btn-danger btn-sm" title="Tambah Stok">
+                                                        <i class="fas fa-plus"></i>
+                                                    </a>
                                                     {{-- print barcode --}}
                                                     <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
                                                         class="btn btn-primary btn-sm" title="Print Barcode">
@@ -184,7 +196,7 @@
                         @else
                             @if ($items->count() > 0)
                                 <div class="text-muted mt-3">
-                                    Total {{ $items->count() }} data gudang
+                                    Total {{ $items->count() }} data Lokasi Rak
                                 </div>
                             @endif
                         @endif

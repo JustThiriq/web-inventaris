@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit Gudang')
+@section('title', 'Edit Lokasi Rak')
 
 @section('content')
     <div class="container-fluid">
@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">
-                                <i class="fas fa-edit"></i> Edit Gudang: {{ $warehouse->name }}
+                                <i class="fas fa-edit"></i> Edit Lokasi Rak: {{ $warehouse->name }}
                             </h4>
                             <a href="{{ route('warehouses.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Kembali
@@ -30,7 +30,7 @@
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5 class="mb-0">Informasi Gudang</h5>
+                                            <h5 class="mb-0">Informasi Lokasi Rak</h5>
                                         </div>
                                         <div class="card-body">
                                             @include('pages.warehouses.form.warehouse', [
@@ -70,7 +70,7 @@
                                                         class="text-muted">{{ $warehouse->created_at->format('d F Y, H:i') }}</span>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <strong>ID Gudang:</strong><br>
+                                                    <strong>ID Lokasi Rak:</strong><br>
                                                     <span class="text-muted">#{{ $warehouse->id }}</span>
                                                 </div>
                                             </div>
@@ -91,7 +91,7 @@
                                                 <i class="fas fa-search"></i> Preview
                                             </button>
                                             <button type="submit" class="btn btn-success">
-                                                <i class="fas fa-save"></i> Update Gudang
+                                                <i class="fas fa-save"></i> Update Lokasi Rak
                                             </button>
                                         </div>
                                     </div>
@@ -111,7 +111,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="previewModalLabel">
-                        <i class="fas fa-eye"></i> Preview Perubahan Gudang
+                        <i class="fas fa-eye"></i> Preview Perubahan Lokasi Rak
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span>
@@ -120,10 +120,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h6 class="text-primary"><i class="fas fa-warehouse"></i> Informasi Gudang</h6>
+                            <h6 class="text-primary"><i class="fas fa-warehouse"></i> Informasi Lokasi Rak</h6>
                             <table class="table table-sm">
                                 <tr>
-                                    <td><strong>Nama Gudang:</strong></td>
+                                    <td><strong>Nama Lokasi Rak:</strong></td>
                                     <td id="preview_name">-</td>
                                 </tr>
                                 <tr>
@@ -156,7 +156,7 @@
                         <i class="fas fa-times"></i> Tutup
                     </button>
                     <button type="button" class="btn btn-success" id="saveFromPreview">
-                        <i class="fas fa-save"></i> Update Gudang
+                        <i class="fas fa-save"></i> Update Lokasi Rak
                     </button>
                 </div>
             </div>

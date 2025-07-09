@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                <i class="fas fa-plus"></i> Edit Kategori: {{ $category->name }}
+                                <i class="fas fa-plus"></i> Edit Jenis: {{ $category->name }}
                             </h4>
                             <a href="{{ route('categories.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Kembali
@@ -50,7 +50,7 @@
                                                 <i class="fas fa-times"></i> Batal
                                             </a>
                                             <button type="submit" class="btn btn-primary bg-success">
-                                                <i class="fas fa-save"></i> Update Kategori
+                                                <i class="fas fa-save"></i> Update Jenis
                                             </button>
                                         </div>
                                     </div>

@@ -332,13 +332,13 @@ return [
             'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => ' Kategori',
+            'text' => ' Jenis',
             'icon' => 'fas fa-tags', // Categories, labels
             'url' => 'categories',
             'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => ' Gudang',
+            'text' => ' Lokasi Rak',
             'icon' => 'fas fa-warehouse', // Warehouses
             'url' => 'warehouses',
             'role' => ['admin'], // Only visible to admin and warehouse roles

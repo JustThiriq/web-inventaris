@@ -95,8 +95,7 @@
                                                             title="Lihat Detail">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
-
-                                                        @if ($request->status === 'pending')
+                                                        @if ($request->status === 'pending' && auth()->user()?->role?->slug !== 'user')
                                                             {{-- Status Button --}}
                                                             <button type="button" class="btn btn-warning btn-sm"
                                                                 data-toggle="modal"
