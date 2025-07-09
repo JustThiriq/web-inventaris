@@ -349,6 +349,12 @@ return [
             'url' => 'produk-request',
             'label_color' => 'warning',
         ],
+        [
+            'text' => ' History Request',
+            'icon' => 'fas fa-history',
+            'url' => 'history',
+            'label_color' => 'info',
+        ],
 
         ['header' => 'Managemen Aplikasi', 'role' => ['admin']], // Only visible to admin role
         [

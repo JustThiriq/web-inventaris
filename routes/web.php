@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
 use App\Http\Controllers\RequestController;
@@ -51,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
         Route::match(['PUT', 'PATCH'], '/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');
     });
+    Route::get('/history', [HistoryController::class, 'index'])->name('produk-request.history');
 
     // Warehouse
     Route::resource('warehouses', WarehouseController::class)->except(['show']);

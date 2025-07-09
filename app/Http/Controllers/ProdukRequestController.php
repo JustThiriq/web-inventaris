@@ -19,7 +19,7 @@ class ProdukRequestController extends Controller
 
         // Search functionality
         if ($request->filled('search')) {
-            $query->where('nama_produk', 'like', '%' . $request->search . '%');
+            $query->search($request->search);
         }
 
         // Status filter
@@ -28,7 +28,9 @@ class ProdukRequestController extends Controller
         }
 
         // Paginate results
-        $produkRequests = $query->latest()->paginate(10);
+        $produkRequests = $query
+            ->pending()
+            ->latest()->paginate(10);
 
         // Append query parameters to pagination links
         $produkRequests->appends($request->query());

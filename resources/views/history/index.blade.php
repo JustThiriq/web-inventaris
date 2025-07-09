@@ -10,22 +10,18 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                <i class="fas fa-clipboard-list"></i> Daftar Produk Request
+                                <i class="fas fa-clipboard-list"></i> History Produk Request
                             </h4>
-                            <a href="{{ route('produk-request.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Request
-                            </a>
                         </div>
                     </div>
 
                     <div class="card-body">
-                        {{-- Success/Error Messages --}}
                         @include('components.flash-message')
 
                         {{-- Filter & Search --}}
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <form method="GET" action="{{ route('produk-request.index') }}">
+                                <form method="GET" action="{{ route('produk-request.history') }}">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control"
                                             placeholder="Cari nama produk..." value="{{ request('search') }}">
@@ -35,6 +31,18 @@
                                             </button>
                                         </div>
                                     </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4">
+                                <form method="GET" action="{{ route('produk-request.history') }}">
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <select name="status" class="form-control" onchange="this.form.submit()">
+                                        <option value="">Semua Status</option>
+                                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>
+                                            Approved</option>
+                                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>
+                                            Rejected</option>
+                                    </select>
                                 </form>
                             </div>
                             <div class="col-md-4 text-right">
