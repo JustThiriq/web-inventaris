@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             // Data Seeding
+            SupplierSeeder::class,
             UnitSeeder::class,
             CategorySeeder::class,
             WarehouseSeeder::class,

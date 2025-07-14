@@ -6,6 +6,7 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
@@ -63,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Warehouse
     Route::resource('warehouses', WarehouseController::class)->except(['show']);
+    Route::resource('suppliers', SupplierController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation
     Route::get('/api/items', [ItemController::class, 'apiSearch'])->name('items.api');

@@ -356,6 +356,12 @@ return [
             'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
+            'text' => 'Supplier',
+            'icon' => 'fas fa-truck',
+            'url' => 'suppliers',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
+        ],
+        [
             'text' => ' Produk Request',
             'icon' => 'fas fa-clipboard-list',
             'url' => 'produk-request',
