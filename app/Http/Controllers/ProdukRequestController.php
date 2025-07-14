@@ -28,10 +28,22 @@ class ProdukRequestController extends Controller
             $query->where('status', $request->status);
         }
 
+        $user = auth()->user();
+        if ($user->role->slug === 'user') {
+            $query->where('user_id', $user->id);
+        } else if ($user->role->slug === 'warehouse') {
+            if ($user->bidang) {
+                $query->join('users', 'users.id', '=', 'user_id')
+                    ->where('bidang_id', $user->bidang->id);
+            }
+        }
+
         // Paginate results
         $produkRequests = $query
             ->pending()
-            ->latest()->paginate(10);
+            ->select('produk_requests.*')
+            ->orderBy('produk_requests.created_at', 'desc')
+            ->paginate(10);
 
         // Append query parameters to pagination links
         $produkRequests->appends($request->query());
@@ -109,12 +121,12 @@ class ProdukRequestController extends Controller
             DB::commit();
 
             return redirect()->route('produk-request.index')
-                ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
+                ->with('success', 'Produk request berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');
         } catch (\Exception $e) {
             DB::rollBack();
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -161,7 +173,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil diupdate!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -178,7 +190,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -238,11 +250,11 @@ class ProdukRequestController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
+                return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

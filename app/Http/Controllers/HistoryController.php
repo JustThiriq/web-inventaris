@@ -15,10 +15,15 @@ class HistoryController extends Controller
     {
         $query = ProdukRequest::query();
 
-        // Check if the user is an admin
-        if (! Auth::user()->role->isAdmin()) {
-            // If not admin, show only user's requests
-            $query->where('user_id', Auth::id());
+
+        $user = auth()->user();
+        if ($user->role->slug === 'user') {
+            $query->where('user_id', $user->id);
+        } else if ($user->role->slug === 'warehouse') {
+            if ($user->bidang) {
+                $query->join('users', 'users.id', '=', 'user_id')
+                    ->where('users.bidang_id', $user->bidang->id);
+            }
         }
 
         // Search functionality
@@ -35,7 +40,9 @@ class HistoryController extends Controller
 
         // Paginate results
         $produkRequests = $query
-            ->latest()->paginate(10);
+            ->select('produk_requests.*')
+            ->orderBy('produk_requests.created_at', 'desc')
+            ->paginate(10);
 
         // Append query parameters to pagination links
         $produkRequests->appends($request->query());
