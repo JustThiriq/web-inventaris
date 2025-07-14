@@ -153,10 +153,10 @@
         </div>
     </div>
 
-    @foreach ($items as $item)
+    @foreach ($items as $produkRequest)
         {{-- Detail Modal --}}
-        <div class="modal fade" id="detailModal{{ $item->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="detailModalLabel{{ $item->id }}" aria-hidden="true">
+        <div class="modal fade" id="detailModal{{ $produkRequest->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="detailModalLabel{{ $produkRequest->id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document"> {{-- modal-lg untuk tabel lebih lebar --}}
                 <div class="modal-content">
                     <div class="modal-header">
@@ -167,20 +167,20 @@
                         <table class="table table-borderless">
                             <tr>
                                 <td width="30%"><strong>Nomor Request:</strong></td>
-                                <td>{{ $item->request_number }}</td>
+                                <td>{{ $produkRequest->request_number }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Deskripsi:</strong></td>
-                                <td>{{ $item->description ?? '-' }}</td>
+                                <td>{{ $produkRequest->description ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Status:</strong></td>
-                                <td>{!! $item->status_badge !!}</td>
+                                <td>{!! $produkRequest->status_badge !!}</td>
                             </tr>
-                            @if ($item->admin_notes)
+                            @if ($produkRequest->admin_notes)
                                 <tr>
                                     <td><strong>Catatan Admin:</strong></td>
-                                    <td>{{ $item->admin_notes }}</td>
+                                    <td>{{ $produkRequest->admin_notes }}</td>
                                 </tr>
                             @endif
                         </table>
@@ -197,7 +197,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($item->details as $index => $detail)
+                                @foreach ($produkRequest->details as $index => $detail)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $detail->item->name ?? '-' }}</td>
@@ -216,10 +216,10 @@
         </div>
 
         {{-- Status Modal --}}
-        <div class="modal fade" id="statusModal{{ $item->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="statusModalLabel{{ $item->id }}" aria-hidden="true">
+        {{-- <div class="modal fade" id="statusModal{{ $produkRequest->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="statusModalLabel{{ $produkRequest->id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <form method="POST" action="{{ route('pemesanan.update-status', $item) }}">
+                <form method="POST" action="{{ route('pemesanan.update-status', $produkRequest) }}">
                     @csrf
                     @method('PUT')
 
@@ -233,15 +233,17 @@
                             <div class="form-group">
                                 <label>Status</label>
                                 <select name="status" class="form-control" required>
-                                    <option value="belum_diambil" {{ $item->status === 'belum_diambil' ? 'selected' : '' }}>Belum Diambil</option>
-                                    <option value="sudah_diambil" {{ $item->status === 'sudah_diambil' ? 'selected' : '' }}>Sudah Diambil</option>
+                                    <option value="approved"
+                                        {{ $produkRequest->status === 'approved' ? 'selected' : '' }}>Approved</option>
+                                    <option value="rejected"
+                                        {{ $produkRequest->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
                                 </select>
                             </div>
 
-                            {{-- <div class="form-group">
+                            <div class="form-group">
                                 <label>Catatan Admin (Opsional)</label>
-                                <textarea name="admin_notes" class="form-control" rows="3">{{ $item->admin_notes }}</textarea>
-                            </div> --}}
+                                <textarea name="admin_notes" class="form-control" rows="3">{{ $produkRequest->admin_notes }}</textarea>
+                            </div>
                         </div>
 
                         <div class="modal-footer">
@@ -253,7 +255,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
     @endforeach
 
 @endsection

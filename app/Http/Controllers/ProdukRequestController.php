@@ -28,7 +28,7 @@ class ProdukRequestController extends Controller
             $query->where('status', $request->status);
         }
 
-        $user = auth()->user();
+        $user = Auth::user();
         if ($user->role->slug === 'user') {
             $query->where('user_id', $user->id);
         } else if ($user->role->slug === 'warehouse') {
@@ -111,6 +111,39 @@ class ProdukRequestController extends Controller
                     'produk_request_id' => $productRequests->id,
                 ]);
             }
+
+            $nonconsumableItems = [];
+            foreach ($items as $item) {
+                $itemModel = Item::find($item['item_id']);
+
+                if (! $itemModel) {
+                    throw new \Exception('Item dengan ID ' . $item['item_id'] . ' tidak ditemukan.');
+                }
+
+                // Check if the item is consumable
+                if ($itemModel->isConsumable()) {
+                    // If consumable, check if the quantity is valid
+                    if ($item['quantity'] <= 0) {
+                        throw new \Exception('Quantity untuk item ' . $itemModel->name . ' harus lebih dari 0.');
+                    }
+                }
+
+                // If not consumable, add to non-consumable items
+                if (! $itemModel->isConsumable()) {
+                    $nonconsumableItems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'produk_request_id' => $productRequests->id,
+                    ];
+                }
+            }
+
+            // if there are non-consumable items, create them as pemesanan
+            if (count($nonconsumableItems) > 0) {
+                $productRequests->buatPemesanan($nonconsumableItems);
+            }
+
+
 
             $success = $productRequests->details()->createMany($items);
             if (! $success) {
@@ -231,13 +264,23 @@ class ProdukRequestController extends Controller
                 ]);
             }
 
+            // if approved, check pemesanan
+            if ($request->status === 'approved') {
+                // Check if there are pemesanan associated with this produk request
+                $pemesananExists = $produkRequest->pemesanan()->where('status', '!=', 'sudah_diambil')->exists();
+                if ($pemesananExists) {
+                    return redirect()->back()
+                        ->with('error', 'Produk request ini memiliki pemesanan item non-consumable yang belum selesai.');
+                }
+            }
+
             // get details
             $details = $produkRequest->details;
             foreach ($details as $detail) {
                 // decrement stock
                 $product = Item::find($detail->item_id);
                 if ($product) {
-                    if ($request->status === 'approved') {
+                    if ($request->status === 'approved' && $product->isConsumable()) {
                         $product->decrementStock($detail->quantity);
                     }
                 }

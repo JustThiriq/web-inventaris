@@ -6,6 +6,7 @@ use App\Models\Core\WithSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class ProdukRequest extends Model
 {
@@ -89,8 +90,46 @@ class ProdukRequest extends Model
         return $badges[$this->status] ?? $badges[self::STATUS_PENDING];
     }
 
+    public function pemesanan()
+    {
+        return $this->hasOne(Pemesanan::class, 'product_request_id', 'id');
+    }
+
     public function details()
     {
         return $this->hasMany(ProductRequestDetail::class, 'produk_request_id');
+    }
+
+    public function randomDigits($length = 8)
+    {
+        return str_pad(random_int(0, 99999999), $length, '0', STR_PAD_LEFT);
+    }
+
+    public function buatPemesanan(array $items)
+    {
+        // Assuming you have a Pemesanan model to handle the non-consumable items
+        $pemesanan = new Pemesanan();
+
+        $pemesanan->product_request_id = $this->id;
+        $pemesanan->no_po = 'PO-' . strtoupper($this->randomDigits(8));
+        $pemesanan->tanggal_pemesanan = now();
+        $pemesanan->supplier_id = $this->supplier_id; // Assuming you have a supplier_id in the model
+        $pemesanan->user_id = Auth::id();
+        $pemesanan->bidang_id = $this->bidang_id; // Assuming you have a bidang_id in the model
+        $pemesanan->status = 'draft';
+        $pemesanan->keterangan = 'Pemesanan untuk item non-konsumsi';
+
+        // Save the pemesanan
+        $pemesanan->save();
+
+        // Attach items to the pemesanan
+        foreach ($items as $item) {
+            $pemesanan->details()->create([
+                'item_id' => $item['item_id'],
+                'jumlah' => $item['quantity'],
+            ]);
+        }
+
+        return $pemesanan;
     }
 }

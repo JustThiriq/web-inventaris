@@ -5,9 +5,9 @@
 @section('content')
     <div class="container-fluid pt-3">
         <h3><i class="fas fa-plus-circle"></i> Tambah Pemesanan</h3>
-
-        <form action="{{ route('pemesanan.store') }}" method="POST">
+        <form action="{{ route('pemesanan.update', $pemesanan) }}" method="POST">
             @csrf
+            @method('PUT')
 
             @include('components.flash-message')
 
@@ -18,35 +18,36 @@
                         <div class="form-group">
                             <label>NO PO</label>
                             <input type="text" name="no_po" class="form-control"
-                                value="{{ old('no_po', $itemNumber ?? '') }}" required>
+                                value="{{ old('no_po', $pemesanan->no_po ?? '') }}" required readonly>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>NO WO</label>
                             <input type="text" name="no_wo" class="form-control"
-                                value="{{ old('no_wo', '') }}" required>
+                                value="{{ old('no_wo', $pemesanan->no_wo ?? '') }}" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Tanggal Pemesanan</label>
                             <input type="date" name="tanggal_pemesanan" class="form-control"
-                                value="{{ old('tanggal_pemesanan', now()->format('Y-m-d')) }}" required>
+                                value="{{ old('tanggal_pemesanan', $pemesanan->tanggal_pemesanan ?? now()->format('Y-m-d')) }}"
+                                required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Tanggal Kedatangan</label>
                             <input type="date" name="tanggal_kedatangan" class="form-control"
-                                value="{{ old('tanggal_kedatangan') }}">
+                                value="{{ old('tanggal_kedatangan', $pemesanan->tanggal_kedatangan ?? '') }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Tanggal Dipakai</label>
                             <input type="date" name="tanggal_dipakai" class="form-control"
-                                value="{{ old('tanggal_dipakai') }}">
+                                value="{{ old('tanggal_dipakai', $pemesanan->tanggal_dipakai ?? '') }}">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -56,7 +57,7 @@
                                 <option value="">Pilih Supplier</option>
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier->id }}"
-                                        {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                        {{ old('supplier_id', $pemesanan->supplier_id ?? '') == $supplier->id ? 'selected' : '' }}>
                                         {{ $supplier->name }}
                                     </option>
                                 @endforeach
@@ -67,7 +68,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Deskripsi (Opsional)</label>
-                            <textarea name="keterangan" class="form-control" rows="2">{{ old('keterangan') }}</textarea>
+                            <textarea name="keterangan" class="form-control" rows="2">{{ old('keterangan', $pemesanan->keterangan ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -78,9 +79,9 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <strong class="w-100">Daftar Produk</strong>
                     <div class="w-100 d-flex justify-content-end">
-                        <button type="button" onclick="addRow()" class="btn btn-sm btn-primary">
+                        {{-- <button type="button" onclick="addRow()" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Baris
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -90,68 +91,44 @@
                                 <tr>
                                     <th style="width: 40%">Produk</th>
                                     <th>Qty</th>
-                                    <th>Aksi</th>
+                                    {{-- <th>Aksi</th> --}}
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                @if (old('produk_requests'))
-                                    @foreach (old('produk_requests') as $index => $produk)
+                                @if ($pemesanan->details)
+                                    @foreach ($pemesanan->details as $index => $produk)
                                         <tr data-index="{{ $index }}">
                                             <td>
                                                 <div class="input-group">
                                                     <input type="text" name="produk_requests[{{ $index }}][name]"
                                                         class="form-control item-name" placeholder="Scan barcode"
-                                                        value="{{ $produk['name'] ?? '' }}" readonly required>
+                                                        value="{{ $produk->item->code . ' - ' . $produk->item->name . ' - ' . $produk->item->category->name }}"
+                                                        readonly required>
                                                     <div class="input-group-append">
 
-                                                        <button type="button" class="btn btn-secondary select-product"
+                                                        {{-- <button type="button" class="btn btn-secondary select-product"
                                                             data-index="{{ $index }}">
                                                             <i class="fas fa-search"></i>
-                                                        </button>
+                                                        </button> --}}
                                                     </div>
                                                     <input type="hidden"
                                                         name="produk_requests[{{ $index }}][item_id]"
-                                                        class="item-id" value="{{ $produk['item_id'] ?? '' }}">
+                                                        class="item-id" value="{{ $produk->item_id ?? '' }}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <input type="number" name="produk_requests[{{ $index }}][jumlah]"
-                                                    class="form-control" value="{{ $produk['jumlah'] ?? '' }}"
-                                                    min="0" step="1" required>
+                                                    class="form-control" value="{{ $produk->jumlah ?? '' }}" min="0"
+                                                    step="1" required readonly>
                                             </td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 <button type="button" class="btn btn-sm btn-danger"
                                                     onclick="removeRow(this)">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
-                                @else
-                                    <tr data-index="0">
-                                        <td>
-                                            <div class="input-group">
-                                                <input type="text" name="produk_requests[0][name]"
-                                                    class="form-control item-name" placeholder="Scan barcode" readonly
-                                                    required>
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary select-product"
-                                                        data-index="0">
-                                                        <i class="fas fa-search"></i>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="produk_requests[0][item_id]" class="item-id">
-                                            </div>
-                                        </td>
-                                        <td><input type="number" name="produk_requests[0][jumlah]" class="form-control"
-                                                min="0" step="1" required></td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="removeRow(this)">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
                                 @endif
                             </tbody>
                         </table>
@@ -273,7 +250,7 @@
                 <input type="hidden" name="produk_requests[${rowIndex}][item_id]" class="item-id">
             </div>
         </td>
-        <td><input type="number" name="produk_requests[${rowIndex}][jumlah]" class="form-control" min="0" step="0.01" required></td>
+        <td><input type="number" name="produk_requests[${rowIndex}][quantity]" class="form-control" min="0" step="0.01" required></td>
         <td>
             // Assuming you have a list of warehouses
             <select name="produk_requests[${rowIndex}][warehouse]

@@ -371,7 +371,7 @@ return [
         [
             'text' => ' History Penerimaan',
             'icon' => 'fas fa-clipboard-list',
-            'url' => 'pemesanan',
+            'url' => 'history/pemesanan',
             'label_color' => 'warning',
             'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],

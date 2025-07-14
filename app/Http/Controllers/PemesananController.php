@@ -32,6 +32,7 @@ class PemesananController extends Controller
 
         // Paginate results
         $items = $query
+            ->pending()
             ->latest()->paginate(10);
 
         // Append query parameters to pagination links
@@ -58,19 +59,14 @@ class PemesananController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'request_date' => 'required|date',
-            'description' => 'nullable|string',
-            'produk_requests' => 'required|array|min:1',
+            'no_po' => 'required',
+            'no_wo' => 'required',
+            'tanggal_pemesanan' => 'required',
+            'tanggal_kedatangan' => 'required',
+            'tanggal_dipakai' => 'required',
+            'supplier_id' => 'required',
             'produk_requests.*.item_id' => 'required|string|max:255',
-            'produk_requests.*.quantity' => 'required|numeric|min:0',
-        ], [
-            'request_date.required' => 'Tanggal request harus diisi.',
-            'description.string' => 'Deskripsi harus berupa teks.',
-            'produk_requests.required' => 'Minimal harus ada satu produk request.',
-            'produk_requests.*.item_id.required' => 'Item harus diisi.',
-            'produk_requests.*.quantity.required' => 'Quantity harus diisi.',
-            'produk_requests.*.quantity.numeric' => 'Quantity harus berupa angka.',
-            'produk_requests.*.quantity.min' => 'Quantity tidak boleh kurang dari 0.',
+            'produk_requests.*.jumlah' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +76,7 @@ class PemesananController extends Controller
         }
 
         // Generate next request number
-        $currentMax = ProdukRequest::withTrashed()->max('id') ?? 0; // Get the current max ID or 0 if no records exist
+        $currentMax = Pemesanan::withTrashed()->max('id') ?? 0; // Get the current max ID or 0 if no records exist
         // Increment by 1 to get the next request number
         $currentMax += 1;
         $requestNumber = sprintf('RQ-%04d', $currentMax);
@@ -91,33 +87,33 @@ class PemesananController extends Controller
 
         DB::beginTransaction();
         try {
-            $productRequests = ProdukRequest::create($request->all());
-            if (! $productRequests) {
-                throw new \Exception('Gagal membuat produk request.');
+            $pemesanan = Pemesanan::create($request->all());
+            if (! $pemesanan) {
+                throw new \Exception('Gagal membuat pemesanan.');
             }
 
             $items = [];
             foreach ($request->produk_requests as $produk) {
                 $items[] = array_merge($produk, [
-                    'produk_request_id' => $productRequests->id,
+                    'pemesanan_id' => $pemesanan->id,
                 ]);
             }
 
-            $success = $productRequests->details()->createMany($items);
+            $success = $pemesanan->details()->createMany($items);
             if (! $success) {
-                throw new \Exception('Gagal menambahkan detail produk request.');
+                throw new \Exception('Gagal menambahkan detail pemesanan.');
             }
 
             // Commit the transaction
             DB::commit();
 
             return redirect()->route('pemesanan.index')
-                ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
+                ->with('success', 'pemesanan berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');
         } catch (\Exception $e) {
             DB::rollBack();
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -125,30 +121,36 @@ class PemesananController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProdukRequest $produkRequest)
+    public function show(Pemesanan $pemesanan)
     {
-        return view('pemesanan.show', compact('produkRequest'));
+        return view('pemesanan.show', compact('pemesanan'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProdukRequest $produkRequest)
+    public function edit(Pemesanan $pemesanan)
     {
-        return view('pemesanan.edit', compact('produkRequest'));
+
+        $suppliers = Supplier::all(); // Assuming you have a Supplier model
+        $warehouses = Item::select('*')->distinct()->get(); // Get distinct warehouses
+
+        return view('pemesanan.edit', compact('pemesanan', 'suppliers', 'warehouses'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProdukRequest $produkRequest)
+    public function update(Request $request, Pemesanan $pemesanan)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'nama_produk' => 'required|string|max:255',
-            'harga_estimasi' => 'required|numeric|min:0',
-            'deskripsi' => 'nullable|string|max:1000',
-            'status' => 'required|in:pending,approved,rejected',
-            'catatan_admin' => 'nullable|string|max:500',
+            'no_po' => 'required',
+            'no_wo' => 'required',
+            'tanggal_pemesanan' => 'required',
+            'tanggal_kedatangan' => 'required',
+            'tanggal_dipakai' => 'required',
+            'supplier_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -158,13 +160,15 @@ class PemesananController extends Controller
         }
 
         try {
-            $produkRequest->update($validator->validated());
+            $payload = $validator->validated();
+            $payload['status'] = 'pending';
+            $pemesanan->update($payload);
 
             return redirect()->route('pemesanan.index')
-                ->with('success', 'Produk request berhasil diupdate!');
+                ->with('success', 'pemesanan berhasil diupdate!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -172,27 +176,26 @@ class PemesananController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProdukRequest $produkRequest)
+    public function destroy(Pemesanan $pemesanan)
     {
         try {
-            $produkRequest->delete();
+            $pemesanan->delete();
 
             return redirect()->route('pemesanan.index')
-                ->with('success', 'Produk request berhasil dihapus!');
+                ->with('success', 'pemesanan berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
     /**
-     * Update status of the produk request.
+     * Update status of the pemesanan.
      */
-    public function updateStatus(Request $request, ProdukRequest $produkRequest)
+    public function updateStatus(Request $request, Pemesanan $pemesanan)
     {
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:pending,approved,rejected',
-            'catatan_admin' => 'nullable|string|max:1000',
+            'status' => 'required|in:belum_diambil,sudah_diambil',
         ]);
 
         if ($validator->fails()) {
@@ -207,29 +210,16 @@ class PemesananController extends Controller
 
         DB::beginTransaction();
         try {
-            $produkRequest->update([
+            $pemesanan->update([
                 'status' => $request->status,
-                'catatan_admin' => $request->catatan_admin,
             ]);
 
-            if ($request->expectsJson()) {
-                DB::rollBack();
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Status berhasil diupdate!',
-                    'status_badge' => $produkRequest->status_badge,
-                ]);
-            }
-
-            // get details
-            $details = $produkRequest->details;
-            foreach ($details as $detail) {
-                // decrement stock
-                $product = Item::find($detail->item_id);
-                if ($product) {
-                    if ($request->status === 'approved') {
-                        $product->decrementStock($detail->quantity);
+            // If the status is 'sudah_diambil', increment stock for consumable items
+            if ($request->status === 'sudah_diambil') {
+                foreach ($pemesanan->details as $detail) {
+                    $item = Item::find($detail->item_id);
+                    if ($item && $item->isConsumable()) {
+                        $item->incrementStock($detail->jumlah);
                     }
                 }
             }
@@ -237,15 +227,15 @@ class PemesananController extends Controller
             DB::commit();
 
             return redirect()->route('pemesanan.index')
-                ->with('success', 'Status produk request berhasil diperbarui.');
+                ->with('success', 'Status pemesanan berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
+                return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

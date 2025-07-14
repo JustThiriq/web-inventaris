@@ -132,10 +132,10 @@
                                             <td>
                                                 <div class="btn-group" role="group">
 
-                                                    <a href="{{ route('items.show', $item) }}" target="_blank"
+                                                    {{-- <a href="{{ route('items.show', $item) }}" target="_blank"
                                                         class="btn btn-info btn-sm" title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    </a> --}}
 
                                                     {{-- print barcode --}}
                                                     <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
