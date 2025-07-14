@@ -366,12 +366,14 @@ return [
             'icon' => 'fas fa-clipboard-list',
             'url' => 'pemesanan',
             'label_color' => 'warning',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' History Penerimaan',
             'icon' => 'fas fa-clipboard-list',
             'url' => 'pemesanan',
             'label_color' => 'warning',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Permintaan Barang',
