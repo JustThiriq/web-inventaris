@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -69,7 +70,14 @@ class ItemController extends Controller
         $query = Item::active()->with(['category', 'warehouse']);
         $this->_searchable($query, $request);
 
-        $items = $query->latest()->limit(10)->get();
+        $query
+            ->join('categories', 'items.category_id', '=', 'categories.id')
+            ->select([
+                'items.id',
+                DB::raw('CONCAT(items.code, " - ", items.name, " - ", categories.name) as name'),
+            ]);
+
+        $items = $query->orderBy('items.created_at', 'desc')->limit(10)->get();
 
         return response()->json($items);
     }

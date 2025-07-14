@@ -125,10 +125,16 @@
                                                     style="max-width: 100px;">
                                             </td>
                                             <td>
-                                                <span class="badge {{ $item->badgeLevel }}" data-toggle="tooltip"
-                                                    title="{{ $item->badgeLabel }}">
-                                                    {{ $item->currentStok }} / {{ $item->minStok }}
-                                                </span>
+                                                @if ($item->category->name === 'Non Consumable')
+                                                    <span class="text-muted">
+                                                        Tidak tersedia
+                                                    </span>
+                                                @else
+                                                    <span class="badge {{ $item->badgeLevel }}" data-toggle="tooltip"
+                                                        title="{{ $item->badgeLabel }}">
+                                                        {{ $item->currentStok }} / {{ $item->minStok }}
+                                                    </span>
+                                                @endif
                                             </td>
 
                                             <td>

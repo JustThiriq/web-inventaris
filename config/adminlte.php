@@ -329,13 +329,13 @@ return [
             'text' => ' Barang',
             'icon' => 'fas fa-box', // Items (products, packages)
             'url' => 'items',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Jenis',
             'icon' => 'fas fa-tags', // Categories, labels
             'url' => 'categories',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => 'Bidang',
@@ -347,13 +347,13 @@ return [
             'text' => 'Satuan',
             'icon' => 'fas fa-tachometer-alt',
             'url' => 'units',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Lokasi Rak',
             'icon' => 'fas fa-warehouse', // Warehouses
             'url' => 'warehouses',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Produk Request',
