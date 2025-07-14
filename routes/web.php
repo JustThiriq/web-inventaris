@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\ProdukRequestController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
@@ -64,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Warehouse
     Route::resource('warehouses', WarehouseController::class)->except(['show']);
+    Route::resource('pemesanan', PemesananController::class)->except(['show']);
     Route::resource('suppliers', SupplierController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation

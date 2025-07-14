@@ -10,10 +10,10 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                Manajemen Ketegori
+                                Manajemen Kategori
                             </h4>
                             <a href="{{ route('categories.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Ketegori
+                                <i class="fas fa-plus"></i> Tambah Kategori
                             </a>
                         </div>
                     </div>
