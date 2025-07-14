@@ -7,7 +7,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -42,6 +41,7 @@ class User extends Authenticatable
         'is_active',
         'last_login',
         'phone',
+        'bidang_id',
     ];
 
     // public function item_requests()
@@ -52,5 +52,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function bidang()
+    {
+        return $this->belongsTo(Bidang::class);
     }
 }

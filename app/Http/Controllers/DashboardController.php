@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
-use App\Models\Warehouse;
 use App\Models\ProdukRequest;
+use App\Models\Warehouse;
 
 class DashboardController extends Controller
 {
@@ -15,7 +15,6 @@ class DashboardController extends Controller
         $requestItem = ProdukRequest::where('status', 'request')->count();
         $category = Category::count();
         $warehouse = Warehouse::count();
-
 
         $boxes = [
             [

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Manajemen Jenis')
+@section('title', 'Manajemen Satuan')
 
 @section('content')
     <div class="container-fluid">
@@ -10,10 +10,10 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                Manajemen Kategori
+                                Manajemen Satuan
                             </h4>
-                            <a href="{{ route('categories.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Kategori
+                            <a href="{{ route('units.create') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Tambah Satuan
                             </a>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
 
 
                         {{-- Searchable --}}
-                        @include('components.searchable', ['route' => 'categories.index'])
+                        @include('components.searchable', ['route' => 'units.index'])
 
                         <!-- Categories Table -->
                         <div class="table-responsive">
@@ -33,29 +33,29 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama Jenis</th>
+                                        <th>Nama Satuan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($categories as $index => $category)
+                                    @forelse($units as $index => $item)
                                         <tr>
-                                            <td>{{ $categories->firstItem() + $index }}</td>
-                                            <td>{{ $category->name }}</td>
+                                            <td>{{ $units->firstItem() + $index }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('categories.edit', $category) }}"
+                                                    <a href="{{ route('units.edit', $item) }}"
                                                         class="btn btn-warning btn-sm" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('categories.destroy', $category) }}"
+                                                    <form action="{{ route('units.destroy', $item) }}"
                                                         method="POST" class="d-inline"
-                                                        id="delete-form-{{ $category->id }}">
+                                                        id="delete-form-{{ $item->id }}">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
                                                     <button type="submit" class="btn btn-danger btn-sm" title="Hapus"
-                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus Jenis ini?')) { document.getElementById('delete-form-{{ $category->id }}').submit(); }">
+                                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus Satuan ini?')) { document.getElementById('delete-form-{{ $item->id }}').submit(); }">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -63,7 +63,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center">Tidak ada data Jenis.</td>
+                                            <td colspan="5" class="text-center">Tidak ada data Satuan.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -71,7 +71,7 @@
                         </div>
 
                         <!-- Pagination -->
-                        @include('components.pagination', ['pagination' => $categories])
+                        @include('components.pagination', ['pagination' => $units])
                     </div>
                 </div>
             </div>

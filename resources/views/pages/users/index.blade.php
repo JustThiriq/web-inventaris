@@ -39,8 +39,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nama</th>
-                                        <th>Email</th>
                                         <th>Role</th>
+                                        <th>Bidang</th>
                                         <th>Status</th>
                                         <th>Last Login</th>
                                         <th>Dibuat</th>
@@ -57,10 +57,14 @@
                                                 @if ($user->id === auth()->id())
                                                     <span class="badge badge-info badge-sm">You</span>
                                                 @endif
+                                                <br>
+                                                <small class="text-muted">{{ $user->email }}</small>
                                             </td>
-                                            <td>{{ $user->email }}</td>
                                             <td>
                                                 {{ ucfirst($user->role?->name ?? '') }}
+                                            </td>
+                                            <td>
+                                                {{ ucfirst($user->bidang?->name ?? '') }}
                                             </td>
                                             <td>
                                                 <span

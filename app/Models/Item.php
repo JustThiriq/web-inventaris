@@ -58,6 +58,7 @@ class Item extends Model
         'barcode',
         'min_stock',
         'current_stock',
+        'unit_id',
     ];
 
     private function randomDigits($length = 9)
@@ -91,6 +92,11 @@ class Item extends Model
         })->whereHas('warehouse', function ($q) {
             $q->whereNull('deleted_at');
         });
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     public function category()
@@ -175,5 +181,4 @@ class Item extends Model
         // Save the changes
         return $this->save();
     }
-
 }

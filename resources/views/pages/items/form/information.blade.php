@@ -37,5 +37,31 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+
+
+        <!-- Warehouse -->
+        <div class="form-group">
+            <label for="unit_id">Satuan</label>
+            <div class="input-group">
+                <select class="form-control @error('unit_id') is-invalid @enderror" id="unit_id"
+                    name="unit_id">
+                    <option value="">Pilih Satuan</option>
+                    @foreach ($units as $unit)
+                        <option value="{{ $unit->id }}"
+                            {{ old('unit_id', $item->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                            {{ $unit->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            @error('unit_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            @if (!empty($item->unit))
+                <small class="form-text text-muted">
+                    Satuan saat ini: <span class="badge badge-secondary">{{ $item->unit->name }}</span>
+                </small>
+            @endif
+        </div>
     </div>
 </div>

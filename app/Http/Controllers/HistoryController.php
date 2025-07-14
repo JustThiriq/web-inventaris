@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ProdukRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class HistoryController extends Controller
 {
@@ -18,7 +16,7 @@ class HistoryController extends Controller
         $query = ProdukRequest::query();
 
         // Check if the user is an admin
-        if (!Auth::user()->role->isAdmin()) {
+        if (! Auth::user()->role->isAdmin()) {
             // If not admin, show only user's requests
             $query->where('user_id', Auth::id());
         }

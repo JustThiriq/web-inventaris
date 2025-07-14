@@ -35,6 +35,36 @@
             @endif
         </div>
 
+        <div class="form-group">
+            <label for="bidang_id" class="required">Bidang</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                </div>
+                <select class="form-control @error('bidang_id') is-invalid @enderror" id="bidang_id" name="bidang_id"
+                    required {{ isset($user) && $user->id === auth()->id() ? 'disabled' : '' }}>
+                    <option value="">Pilih Bidang</option>
+                    @foreach ($bidangs as $bidang)
+                        <option value="{{ $bidang->id }}"
+                            {{ old('bidang_id', isset($user) ? $user->bidang_id : '') == $bidang->id ? 'selected' : '' }}>
+                            {{ ucfirst($bidang->name) }}
+                        </option>
+                    @endforeach
+                </select>
+                @if (isset($user) && $user->id === auth()->id())
+                    <input type="hidden" name="bidang_id" value="{{ isset($user) ? $user->bidang_id : '' }}">
+                @endif
+                @error('bidang_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            @if (isset($user) && $user->id === auth()->id())
+                <small class="form-text text-info">
+                    <i class="fas fa-info-circle"></i> Anda tidak dapat mengubah role diri sendiri
+                </small>
+            @endif
+        </div>
+
         <!-- Password Change Section -->
         @if (isset($user))
             <div class="form-group">
@@ -111,7 +141,8 @@
         <div class="form-group">
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="send_notification_email"
-                    name="send_notification_email" value="1" {{ old('send_notification_email') ? 'checked' : '' }}>
+                    name="send_notification_email" value="1"
+                    {{ old('send_notification_email') ? 'checked' : '' }}>
                 <label class="custom-control-label" for="send_notification_email">
                     Kirim Email Notifikasi Perubahan
                 </label>

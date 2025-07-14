@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Pemesanan;
 use App\Models\ProdukRequest;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ProdukRequestController extends Controller
+class PemesananController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = ProdukRequest::query();
+        $query = Pemesanan::query();
 
         // Search functionality
         if ($request->filled('search')) {
@@ -29,14 +31,13 @@ class ProdukRequestController extends Controller
         }
 
         // Paginate results
-        $produkRequests = $query
-            ->pending()
+        $items = $query
             ->latest()->paginate(10);
 
         // Append query parameters to pagination links
-        $produkRequests->appends($request->query());
+        $items->appends($request->query());
 
-        return view('produk-request.index', compact('produkRequests'));
+        return view('pemesanan.index', compact('items'));
     }
 
     /**
@@ -45,8 +46,10 @@ class ProdukRequestController extends Controller
     public function create()
     {
         $requestNumber = 'Auto generated'; // Generate next request number
+        $suppliers = Supplier::all(); // Assuming you have a Supplier model
+        $warehouses = Item::select('*')->distinct()->get(); // Get distinct warehouses
 
-        return view('produk-request.create', compact('requestNumber'));
+        return view('pemesanan.create', compact('requestNumber', 'suppliers', 'warehouses'));
     }
 
     /**
@@ -108,7 +111,7 @@ class ProdukRequestController extends Controller
             // Commit the transaction
             DB::commit();
 
-            return redirect()->route('produk-request.index')
+            return redirect()->route('pemesanan.index')
                 ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -124,7 +127,7 @@ class ProdukRequestController extends Controller
      */
     public function show(ProdukRequest $produkRequest)
     {
-        return view('produk-request.show', compact('produkRequest'));
+        return view('pemesanan.show', compact('produkRequest'));
     }
 
     /**
@@ -132,7 +135,7 @@ class ProdukRequestController extends Controller
      */
     public function edit(ProdukRequest $produkRequest)
     {
-        return view('produk-request.edit', compact('produkRequest'));
+        return view('pemesanan.edit', compact('produkRequest'));
     }
 
     /**
@@ -157,7 +160,7 @@ class ProdukRequestController extends Controller
         try {
             $produkRequest->update($validator->validated());
 
-            return redirect()->route('produk-request.index')
+            return redirect()->route('pemesanan.index')
                 ->with('success', 'Produk request berhasil diupdate!');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -174,7 +177,7 @@ class ProdukRequestController extends Controller
         try {
             $produkRequest->delete();
 
-            return redirect()->route('produk-request.index')
+            return redirect()->route('pemesanan.index')
                 ->with('success', 'Produk request berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -233,7 +236,7 @@ class ProdukRequestController extends Controller
 
             DB::commit();
 
-            return redirect()->route('produk-request.index')
+            return redirect()->route('pemesanan.index')
                 ->with('success', 'Status produk request berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();

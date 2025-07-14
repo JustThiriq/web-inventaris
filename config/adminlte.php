@@ -329,22 +329,52 @@ return [
             'text' => ' Barang',
             'icon' => 'fas fa-box', // Items (products, packages)
             'url' => 'items',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Jenis',
             'icon' => 'fas fa-tags', // Categories, labels
             'url' => 'categories',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
+        ],
+        [
+            'text' => 'Bidang',
+            'icon' => 'fas fa-tags', // Fields, areas
+            'url' => 'fields',
             'role' => ['admin'], // Only visible to admin and warehouse roles
+        ],
+        [
+            'text' => 'Satuan',
+            'icon' => 'fas fa-tachometer-alt',
+            'url' => 'units',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
             'text' => ' Lokasi Rak',
             'icon' => 'fas fa-warehouse', // Warehouses
             'url' => 'warehouses',
-            'role' => ['admin'], // Only visible to admin and warehouse roles
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => ' Produk Request',
+            'text' => 'Supplier',
+            'icon' => 'fas fa-truck',
+            'url' => 'suppliers',
+            'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
+        ],
+        [
+            'text' => ' Penerimaan Supplier',
+            'icon' => 'fas fa-clipboard-list',
+            'url' => 'pemesanan',
+            'label_color' => 'warning',
+        ],
+        [
+            'text' => ' History Penerimaan',
+            'icon' => 'fas fa-clipboard-list',
+            'url' => 'pemesanan',
+            'label_color' => 'warning',
+        ],
+        [
+            'text' => ' Permintaan Barang',
             'icon' => 'fas fa-clipboard-list',
             'url' => 'produk-request',
             'label_color' => 'warning',
