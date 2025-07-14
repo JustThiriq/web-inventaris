@@ -9,6 +9,7 @@ class Bidang extends Model
 {
     use WithSearch;
 
+    protected $searchable = ['name'];
     protected $fillable = [
         'name',
     ];
