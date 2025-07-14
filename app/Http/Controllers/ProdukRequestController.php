@@ -45,6 +45,7 @@ class ProdukRequestController extends Controller
     public function create()
     {
         $requestNumber = 'Auto generated'; // Generate next request number
+
         return view('produk-request.create', compact('requestNumber'));
     }
 
@@ -88,7 +89,7 @@ class ProdukRequestController extends Controller
         DB::beginTransaction();
         try {
             $productRequests = ProdukRequest::create($request->all());
-            if (!$productRequests) {
+            if (! $productRequests) {
                 throw new \Exception('Gagal membuat produk request.');
             }
 
@@ -100,7 +101,7 @@ class ProdukRequestController extends Controller
             }
 
             $success = $productRequests->details()->createMany($items);
-            if (!$success) {
+            if (! $success) {
                 throw new \Exception('Gagal menambahkan detail produk request.');
             }
 
@@ -108,11 +109,12 @@ class ProdukRequestController extends Controller
             DB::commit();
 
             return redirect()->route('produk-request.index')
-                ->with('success', 'Produk request berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');
+                ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -159,7 +161,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil diupdate!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -176,7 +178,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 
@@ -209,6 +211,7 @@ class ProdukRequestController extends Controller
 
             if ($request->expectsJson()) {
                 DB::rollBack();
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Status berhasil diupdate!',
@@ -229,16 +232,17 @@ class ProdukRequestController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('produk-request.index')
                 ->with('success', 'Status produk request berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 }

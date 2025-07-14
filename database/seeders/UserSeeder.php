@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bidang;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -22,12 +23,28 @@ class UserSeeder extends Seeder
             'role_id' => $adminRole->id,
         ]);
 
-        $userRole = Role::where('slug', 'user')->first();
-        User::create([
-            'name' => 'Jane Smith',
-            'email' => 'jane@example.com',
-            'password' => Hash::make('password'),
-            'role_id' => $userRole->id,
-        ]);
+        $bidangs = Bidang::all();
+        foreach ($bidangs as $bidang) {
+
+            $namaBidang = str_replace(' ', '_', strtolower($bidang->name));
+
+            $userRole = Role::where('slug', 'warehouse')->first();
+            User::create([
+                'name' => 'Warehouse Manager '.$namaBidang,
+                'email' => 'warehouse_'.strtolower($namaBidang).'@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $userRole->id,
+                'bidang_id' => $bidang->id,
+            ]);
+
+            $userRole = Role::where('slug', 'user')->first();
+            User::create([
+                'name' => 'Warehouse Staff '.$namaBidang,
+                'email' => 'warehouse_staff_'.strtolower($namaBidang).'@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $userRole->id,
+                'bidang_id' => $bidang->id,
+            ]);
+        }
     }
 }

@@ -20,10 +20,12 @@ class ItemFactory extends Factory
     {
         $categoryIds = Category::pluck('id')->toArray();
         $warehouseIds = Warehouse::pluck('id')->toArray();
+        $unitIds = \App\Models\Unit::pluck('id')->toArray();
 
         return [
             'code' => fake()->unique()->word,
             'name' => fake()->word,
+            'unit_id' => fake()->randomElement($unitIds),
             'category_id' => fake()->randomElement($categoryIds),
             'warehouse_id' => fake()->randomElement($warehouseIds),
             'barcode' => fake()->unique()->ean13,

@@ -17,6 +17,10 @@ class RoleSeeder extends Seeder
             'slug' => 'admin',
         ]);
         Role::create([
+            'name' => 'Warehouse Manager',
+            'slug' => 'warehouse',
+        ]);
+        Role::create([
             'name' => 'Common User',
             'slug' => 'user',
         ]);

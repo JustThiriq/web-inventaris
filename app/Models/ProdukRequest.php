@@ -12,15 +12,15 @@ class ProdukRequest extends Model
     use HasFactory, SoftDeletes, WithSearch;
 
     const STATUS_PENDING = 'pending';
-    const STATUS_APPROVED = 'approved';
-    const STATUS_REJECTED = 'rejected';
 
+    const STATUS_APPROVED = 'approved';
+
+    const STATUS_REJECTED = 'rejected';
 
     protected $searchable = [
         'request_number',
         'description',
     ];
-
 
     protected $fillable = [
         'request_number',

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-
     protected function _searchable($query, $request)
     {
         // Filter by category_id
@@ -159,11 +158,11 @@ class ItemController extends Controller
     public function update(Request $request, Item $item)
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:items,code,' . $item->id,
+            'code' => 'required|string|max:255|unique:items,code,'.$item->id,
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
-            'barcode' => 'nullable|string|max:255|unique:items,barcode,' . $item->id,
+            'barcode' => 'nullable|string|max:255|unique:items,barcode,'.$item->id,
             'min_stock' => 'nullable|integer|min:0',
             'current_stock' => 'nullable|integer|min:0',
         ]);

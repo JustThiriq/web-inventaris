@@ -58,6 +58,7 @@ class Item extends Model
         'barcode',
         'min_stock',
         'current_stock',
+        'unit_id',
     ];
 
     private function randomDigits($length = 9)
@@ -175,5 +176,4 @@ class Item extends Model
         // Save the changes
         return $this->save();
     }
-
 }
