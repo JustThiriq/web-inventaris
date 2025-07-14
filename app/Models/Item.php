@@ -94,6 +94,11 @@ class Item extends Model
         });
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

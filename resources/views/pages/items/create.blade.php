@@ -26,16 +26,16 @@
 
                             <div class="row">
                                 <!-- Left Column -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     @include('pages.items.form.information')
                                     @include('pages.items.form.category-warehouse')
                                 </div>
 
                                 <!-- Right Column -->
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
 
                                     @include('pages.items.form.stock')
-                                </div>
+                                </div> --}}
                             </div>
 
                             <!-- Action Buttons -->

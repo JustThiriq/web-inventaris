@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
@@ -105,8 +106,9 @@ class ItemController extends Controller
     {
         $categories = Category::all();
         $warehouses = Warehouse::all();
+        $units = Unit::all(); // Assuming you have a Unit model
 
-        return view('pages.items.create', compact('categories', 'warehouses'));
+        return view('pages.items.create', compact('categories', 'warehouses', 'units'));
     }
 
     /**
@@ -119,10 +121,15 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
+            'unit_id' => 'nullable|exists:units,id',
             'barcode' => 'nullable|string|max:255|unique:items,barcode',
-            'min_stock' => 'nullable|integer|min:0',
-            'current_stock' => 'nullable|integer|min:0',
+            // 'min_stock' => 'nullable|integer|min:0',
+            // 'current_stock' => 'nullable|integer|min:0',
         ]);
+
+        // min_stock and current_stock can be set to 0 by default
+        $validated['min_stock'] = $validated['min_stock'] ?? 0;
+        $validated['current_stock'] = $validated['current_stock'] ?? 0;
 
         Item::create($validated);
 
@@ -136,7 +143,7 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         // Load relationships defined in the model
-        $item->load(['category', 'warehouse', 'item_requests']);
+        $item->load(['category', 'warehouse', 'unit']);
 
         return view('pages.items.show', compact('item'));
     }
@@ -148,8 +155,9 @@ class ItemController extends Controller
     {
         $categories = Category::all();
         $warehouses = Warehouse::all();
+        $units = Unit::all(); // Assuming you have a Unit model
 
-        return view('pages.items.edit', compact('item', 'categories', 'warehouses'));
+        return view('pages.items.edit', compact('item', 'categories', 'warehouses', 'units'));
     }
 
     /**
@@ -162,9 +170,10 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
+            'unit_id' => 'nullable|exists:units,id',
             'barcode' => 'nullable|string|max:255|unique:items,barcode,'.$item->id,
-            'min_stock' => 'nullable|integer|min:0',
-            'current_stock' => 'nullable|integer|min:0',
+            // 'min_stock' => 'nullable|integer|min:0',
+            // 'current_stock' => 'nullable|integer|min:0',
         ]);
 
         $item->update($validated);

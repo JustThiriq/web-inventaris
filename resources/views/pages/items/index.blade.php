@@ -91,6 +91,7 @@
                                         <th style="min-width: 150px">Lokasi Rak</th>
                                         <th style="min-width: 150px">Barcode</th>
                                         <th style="min-width: 150px">Stok</th>
+                                        <th style="min-width: 150px">Satuan</th>
                                         <th style="min-width: 150px">Aksi</th>
                                     </tr>
                                 </thead>
@@ -131,17 +132,19 @@
                                             </td>
 
                                             <td>
+                                                <span class="badge badge-success" data-toggle="tooltip">
+                                                    {{ $item->unit->name ?? '-' }}
+                                                </span>
+                                            </td>
+
+                                            <td>
                                                 <div class="btn-group" role="group">
 
-                                                    <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
+                                                    <a href="{{ route('items.show', $item) }}" target="_blank"
                                                         class="btn btn-info btn-sm" title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
-                                                    <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
-                                                        class="btn btn-danger btn-sm" title="Tambah Stok">
-                                                        <i class="fas fa-plus"></i>
-                                                    </a>
                                                     {{-- print barcode --}}
                                                     <a href="{{ route('items.print-barcode', $item) }}" target="_blank"
                                                         class="btn btn-primary btn-sm" title="Print Barcode">

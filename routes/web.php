@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/users', [UserController::class, 'getData'])->name('users.api');
 
     // Items - Add these routes
-    Route::resource('items', ItemController::class)->except(['show']);
+    Route::resource('items', ItemController::class);
     Route::patch('/items/{item}/activate', [ItemController::class, 'activate'])->name('items.activate');
     Route::get('/items/{item}/print-barcode', [ItemController::class, 'printBarcode'])->name('items.print-barcode');
     Route::get('/items/search-by-barcode/{code}', [ItemController::class, 'searchByBarcode'])->name('items.search-by-barcode');
