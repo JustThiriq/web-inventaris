@@ -47,8 +47,9 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all(); // Assuming you have a Role model
+        $bidangs = \App\Models\Bidang::orderBy('name')->get(); // Assuming you have a Bidang model
 
-        return view('pages.users.create', compact('roles'));
+        return view('pages.users.create', compact('roles', 'bidangs'));
     }
 
     /**
@@ -56,13 +57,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
             'is_active' => 'sometimes|boolean',
-        ]);
+        ];
+
+        // if role_id != 'admin', then bidang_id is required
+        if ($request->role_id != 1) {
+            $rules['bidang_id'] = 'required|exists:bidangs,id';
+        }
+        $validated = $request->validate($rules);
         // check if the password confirmation is set
         if (isset($validated['password_confirmation'])) {
             if ($validated['password'] !== $validated['password_confirmation']) {
@@ -90,8 +97,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::orderBy('name')->get();
+        $bidangs = \App\Models\Bidang::orderBy('name')->get(); // Assuming you have a Bidang model
 
-        return view('pages.users.edit', compact('user', 'roles'));
+        return view('pages.users.edit', compact('user', 'roles', 'bidangs'));
     }
 
     /**
@@ -99,16 +107,23 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'role_id' => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20',
             'password' => 'nullable|min:8|confirmed',
             'is_active' => 'boolean',
-        ]);
+        ];
 
-        $data = $request->only(['name', 'email', 'role_id', 'phone', 'is_active']);
+        // if role_id != 'admin', then bidang_id is required
+        if ($request->role_id != 1) {
+            $rules['bidang_id'] = 'required|exists:bidangs,id';
+        }
+
+        $request->validate($rules);
+
+        $data = $request->only(['name', 'email', 'role_id', 'phone', 'is_active', 'bidang_id']);
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
