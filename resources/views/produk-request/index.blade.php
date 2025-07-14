@@ -55,6 +55,9 @@
                                             <th width="15%">Deskripsi</th>
                                             <th width="10%">Status</th>
                                             <th width="10%">Tanggal</th>
+                                            @if (auth()->user()->role->slug !== 'user')
+                                                <th>Pemesanan</th>
+                                            @endif
                                             <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -86,6 +89,16 @@
                                                         {{ $request->request_date->format('H:i') }}
                                                     </small>
                                                 </td>
+                                                @if (auth()->user()->role->slug !== 'user')
+                                                    <td>
+                                                        @if ($request->pemesanan()->exists())
+                                                            <a href="{{ route('pemesanan.edit', $request->pemesanan->id) }}"
+                                                                class="btn btn-sm btn-primary">Lihat Pemesanan</a>
+                                                        @else
+                                                            <span class="badge badge-danger">Belum Ada Pemesanan</span>
+                                                        @endif
+                                                    </td>
+                                                @endif
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         {{-- View Button --}}

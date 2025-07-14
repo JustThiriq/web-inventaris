@@ -66,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
     // Warehouse
     Route::resource('warehouses', WarehouseController::class)->except(['show']);
     Route::resource('pemesanan', PemesananController::class)->except(['show']);
+    Route::prefix('pemesanan')->name('pemesanan.')->group(function () {
+        Route::match(['PUT', 'PATCH'], '/{pemesanan}/update-status', [PemesananController::class, 'updateStatus'])->name('update-status');
+    });
+    Route::get('/history/pemesanan', [HistoryController::class, 'pemesanan'])->name('pemesanan.history');
     Route::resource('suppliers', SupplierController::class)->except(['show']);
 
     // 🔧 Optional: For AJAX/API use and barcode generation

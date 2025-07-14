@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Item
@@ -155,9 +156,9 @@ class Item extends Model
         }
 
         // Check if barcode file exists
-        $barcodePath = public_path('barcodes/'.$this->barcode.'.png');
+        $barcodePath = public_path('barcodes/' . $this->barcode . '.png');
         if (file_exists($barcodePath)) {
-            return asset('barcodes/'.$this->barcode.'.png');
+            return asset('barcodes/' . $this->barcode . '.png');
         }
 
         // Generate barcode if it doesn't exist
@@ -165,7 +166,7 @@ class Item extends Model
         $barcodeImage = $barcodeGenerator->getBarcode($this->barcode, $barcodeGenerator::TYPE_CODE_128);
         file_put_contents($barcodePath, $barcodeImage);
 
-        return asset('barcodes/'.$this->barcode.'.png');
+        return asset('barcodes/' . $this->barcode . '.png');
     }
 
     public function decrementStock($amount)
@@ -180,5 +181,24 @@ class Item extends Model
 
         // Save the changes
         return $this->save();
+    }
+
+    public function incrementStock($amount)
+    {
+        // Ensure current_stock is not null
+        if ($this->current_stock === null) {
+            $this->current_stock = 0;
+        }
+
+        // Increment the stock
+        $this->current_stock += $amount;
+
+        // Save the changes
+        return $this->save();
+    }
+
+    public function isConsumable()
+    {
+        return $this->category && $this->category->name === 'Consumable';
     }
 }

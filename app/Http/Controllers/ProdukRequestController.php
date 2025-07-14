@@ -28,10 +28,22 @@ class ProdukRequestController extends Controller
             $query->where('status', $request->status);
         }
 
+        $user = Auth::user();
+        if ($user->role->slug === 'user') {
+            $query->where('user_id', $user->id);
+        } else if ($user->role->slug === 'warehouse') {
+            if ($user->bidang) {
+                $query->join('users', 'users.id', '=', 'user_id')
+                    ->where('bidang_id', $user->bidang->id);
+            }
+        }
+
         // Paginate results
         $produkRequests = $query
             ->pending()
-            ->latest()->paginate(10);
+            ->select('produk_requests.*')
+            ->orderBy('produk_requests.created_at', 'desc')
+            ->paginate(10);
 
         // Append query parameters to pagination links
         $produkRequests->appends($request->query());
@@ -100,6 +112,39 @@ class ProdukRequestController extends Controller
                 ]);
             }
 
+            $nonconsumableItems = [];
+            foreach ($items as $item) {
+                $itemModel = Item::find($item['item_id']);
+
+                if (! $itemModel) {
+                    throw new \Exception('Item dengan ID ' . $item['item_id'] . ' tidak ditemukan.');
+                }
+
+                // Check if the item is consumable
+                if ($itemModel->isConsumable()) {
+                    // If consumable, check if the quantity is valid
+                    if ($item['quantity'] <= 0) {
+                        throw new \Exception('Quantity untuk item ' . $itemModel->name . ' harus lebih dari 0.');
+                    }
+                }
+
+                // If not consumable, add to non-consumable items
+                if (! $itemModel->isConsumable()) {
+                    $nonconsumableItems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'produk_request_id' => $productRequests->id,
+                    ];
+                }
+            }
+
+            // if there are non-consumable items, create them as pemesanan
+            if (count($nonconsumableItems) > 0) {
+                $productRequests->buatPemesanan($nonconsumableItems);
+            }
+
+
+
             $success = $productRequests->details()->createMany($items);
             if (! $success) {
                 throw new \Exception('Gagal menambahkan detail produk request.');
@@ -109,12 +154,12 @@ class ProdukRequestController extends Controller
             DB::commit();
 
             return redirect()->route('produk-request.index')
-                ->with('success', 'Produk request berhasil ditambahkan! Total: '.count($request->produk_requests).' item.');
+                ->with('success', 'Produk request berhasil ditambahkan! Total: ' . count($request->produk_requests) . ' item.');
         } catch (\Exception $e) {
             DB::rollBack();
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -161,7 +206,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil diupdate!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -178,7 +223,7 @@ class ProdukRequestController extends Controller
                 ->with('success', 'Produk request berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -219,13 +264,23 @@ class ProdukRequestController extends Controller
                 ]);
             }
 
+            // if approved, check pemesanan
+            if ($request->status === 'approved') {
+                // Check if there are pemesanan associated with this produk request
+                $pemesananExists = $produkRequest->pemesanan()->where('status', '!=', 'sudah_diambil')->exists();
+                if ($pemesananExists) {
+                    return redirect()->back()
+                        ->with('error', 'Produk request ini memiliki pemesanan item non-consumable yang belum selesai.');
+                }
+            }
+
             // get details
             $details = $produkRequest->details;
             foreach ($details as $detail) {
                 // decrement stock
                 $product = Item::find($detail->item_id);
                 if ($product) {
-                    if ($request->status === 'approved') {
+                    if ($request->status === 'approved' && $product->isConsumable()) {
                         $product->decrementStock($detail->quantity);
                     }
                 }
@@ -238,11 +293,11 @@ class ProdukRequestController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
+                return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

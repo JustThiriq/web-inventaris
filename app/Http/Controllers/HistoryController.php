@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pemesanan;
 use App\Models\ProdukRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +16,15 @@ class HistoryController extends Controller
     {
         $query = ProdukRequest::query();
 
-        // Check if the user is an admin
-        if (! Auth::user()->role->isAdmin()) {
-            // If not admin, show only user's requests
-            $query->where('user_id', Auth::id());
+
+        $user = auth()->user();
+        if ($user->role->slug === 'user') {
+            $query->where('user_id', $user->id);
+        } else if ($user->role->slug === 'warehouse') {
+            if ($user->bidang) {
+                $query->join('users', 'users.id', '=', 'user_id')
+                    ->where('users.bidang_id', $user->bidang->id);
+            }
         }
 
         // Search functionality
@@ -35,11 +41,55 @@ class HistoryController extends Controller
 
         // Paginate results
         $produkRequests = $query
-            ->latest()->paginate(10);
+            ->select('produk_requests.*')
+            ->orderBy('produk_requests.created_at', 'desc')
+            ->paginate(10);
 
         // Append query parameters to pagination links
         $produkRequests->appends($request->query());
 
         return view('history.index', compact('produkRequests'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function pemesanan(Request $request)
+    {
+        $query = Pemesanan::query();
+
+
+        $user = auth()->user();
+        if ($user->role->slug === 'user') {
+            $query->where('user_id', $user->id);
+        } else if ($user->role->slug === 'warehouse') {
+            if ($user->bidang) {
+                $query->join('users', 'users.id', '=', 'user_id')
+                    ->where('users.bidang_id', $user->bidang->id);
+            }
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $query->search($request->search);
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        } else {
+            $query->notPending(); // Default to not pending if no status is provided
+        }
+
+        // Paginate results
+        $items = $query
+            ->select('pemesanans.*')
+            ->orderBy('pemesanans.created_at', 'desc')
+            ->paginate(10);
+
+        // Append query parameters to pagination links
+        $items->appends($request->query());
+
+        return view('history.pemesanan', compact('items'));
     }
 }
