@@ -50,17 +50,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <select name="stock" id="stockFilter" class="form-control">
-                                    <option value="">Semua Stok</option>
-                                    <option value="low" {{ request('stock') == 'low' ? 'selected' : '' }}>Stok
-                                        Rendah</option>
-                                    <option value="warning" {{ request('stock') == 'warning' ? 'selected' : '' }}>Stok
-                                        Perhatian</option>
-                                    <option value="high" {{ request('stock') == 'high' ? 'selected' : '' }}>Stok
-                                        Tinggi</option>
-                                </select>
-                            </div>
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input type="text" name="search" id="searchInput" class="form-control"
@@ -235,12 +224,14 @@
             </div>
         </div>
     </div>
+    <canvas id="canvas" style="display: none;"></canvas>
 
     @push('js')
         <script src="//unpkg.com/javascript-barcode-reader"></script>
 
         <script>
             const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
             $(document).ready(function() {
                 // Initialize tooltips
                 $('[data-toggle="tooltip"]').tooltip();
