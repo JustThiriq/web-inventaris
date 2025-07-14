@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProdukRequestController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Categories
     Route::resource('categories', CategoryController::class)->except(['show']);
+
+    // Bidang (Fields)
+    Route::resource('fields', FieldController::class)->except(['show']);
+
+    // Satuan (Units)
+    Route::resource('units', UnitController::class)->except(['show']);
 
     // Produk Request Routes
     Route::resource('produk-request', ProdukRequestController::class)->except(['show']);

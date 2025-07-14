@@ -344,6 +344,12 @@ return [
             'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
+            'text' => 'Satuan',
+            'icon' => 'fas fa-tachometer-alt',
+            'url' => 'units',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
+        ],
+        [
             'text' => ' Lokasi Rak',
             'icon' => 'fas fa-warehouse', // Warehouses
             'url' => 'warehouses',
