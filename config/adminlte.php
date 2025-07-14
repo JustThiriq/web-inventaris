@@ -338,6 +338,12 @@ return [
             'role' => ['admin'], // Only visible to admin and warehouse roles
         ],
         [
+            'text' => 'Bidang',
+            'icon' => 'fas fa-tags', // Fields, areas
+            'url' => 'fields',
+            'role' => ['admin'], // Only visible to admin and warehouse roles
+        ],
+        [
             'text' => ' Lokasi Rak',
             'icon' => 'fas fa-warehouse', // Warehouses
             'url' => 'warehouses',
