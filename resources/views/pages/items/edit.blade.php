@@ -36,10 +36,10 @@
                                 {{-- <div class="col-md-3">
                                     <strong>Total Request:</strong> {{ $item->item_requests->count() }} request
                                 </div> --}}
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <strong>Status Stok:</strong>
                                     <span class="badge {{ $item->badgeLevel }}">{{ $item->badgeLabel }}</span>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
