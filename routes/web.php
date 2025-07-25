@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('units', UnitController::class)->except(['show']);
 
     // Produk Request Routes
+    Route::get('/produk-request/print/{produkRequest}', [ProdukRequestController::class, 'print'])->name('produk-request.print');
     Route::resource('produk-request', ProdukRequestController::class)->except(['show']);
     Route::prefix('produk-request')->name('produk-request.')->group(function () {
         Route::match(['PUT', 'PATCH'], '/{produkRequest}/update-status', [ProdukRequestController::class, 'updateStatus'])->name('update-status');

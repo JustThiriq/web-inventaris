@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\ProdukRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -299,5 +300,16 @@ class ProdukRequestController extends Controller
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    public function print(Request $request, ProdukRequest $produkRequest)
+    {
+        // dd($produkRequest);
+        $pdf = Pdf::loadView('report.pdf.transaction', [
+            'transaction' => $produkRequest,
+        ]);
+
+        return $pdf->stream();
+        // return $pdf->download('invoice.pdf');
     }
 }
