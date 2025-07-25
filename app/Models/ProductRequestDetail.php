@@ -31,4 +31,9 @@ class ProductRequestDetail extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function getQuantityFormattedAttribute()
+    {
+        return preg_replace('/\,00\b/', '', number_format($this->quantity, 2, ',', '.'));
+    }
 }

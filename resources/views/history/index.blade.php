@@ -104,6 +104,15 @@
                                                             <i class="fas fa-eye"></i>
                                                         </button>
 
+                                                        @if ($request->status === 'approved')
+                                                            {{-- Print Button --}}
+                                                            <a href="{{ route('produk-request.print', $request) }}"
+                                                                class="btn btn-warning btn-sm" title="Cetak Request"
+                                                                target="_blank">
+                                                                <i class="fas fa-print"></i>
+                                                            </a>
+                                                        @endif
+
                                                         @if ($request->status === 'pending')
                                                             {{-- Status Button --}}
                                                             <button type="button" class="btn btn-warning btn-sm"
