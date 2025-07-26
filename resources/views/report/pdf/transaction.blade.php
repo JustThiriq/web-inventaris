@@ -218,6 +218,36 @@
                 </tr>
             @endforeach
         </tbody>
+
+
+    </table>
+
+    <div style="margin-top: 3rem;"></div>
+
+    <table style="width: 100%; border: 2px solid #000; border-spacing: 0; font-size: 8pt">
+        <tr>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;"><strong>Dikeluarkan / Diterima Oleh
+                    <br />Supervisor Gudang</strong></td>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;"><strong>Tanggal <br/> Dikeluarkan /
+                    Diterima</strong></td>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;"><strong>Diambil / Diterima
+                    Oleh <br/> User Peminta,</strong></td>
+            <td style="padding:5px;text-align:center;"><strong>Mengetahui</strong></td>
+        </tr>
+        <tr>
+            <td style="padding:30px;text-align:center;border-right: 2px solid #000;"></td>
+            <td style="padding:30px;text-align:center;border-right: 2px solid #000;"></td>
+            <td style="padding:30px;text-align:center;border-right: 2px solid #000;"></td>
+            <td style="padding:30px;text-align:center;"></td>
+        </tr>
+        <tr>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;">( ..................................
+                )</td>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;"></td>
+            <td style="padding:5px;text-align:center;border-right: 2px solid #000;">( ..................................
+                )</td>
+            <td style="padding:5px;text-align:center;">( .................................. )</td>
+        </tr>
     </table>
 
 </body>
