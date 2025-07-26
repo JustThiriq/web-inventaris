@@ -232,6 +232,17 @@
         <script>
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
+            const fps = 25;
+            let intervalization;
+            let alreadyDetected = false;
+            let formats = ['qr_code'];
+            // Save all formats to formats var 
+            // BarcodeDetector.getSupportedFormats().then(arr => formats = arr);
+            // Create new barcode detector with all supported formats
+            const barcodeDetector = new BarcodeDetector({
+                formats
+            });
+
             $(document).ready(function() {
                 // Initialize tooltips
                 $('[data-toggle="tooltip"]').tooltip();
@@ -239,6 +250,7 @@
                 // Initialize barcode scanner
                 const video = document.getElementById('video');
                 const constraints = {
+                    audio: false,
                     video: {
                         facingMode: 'environment',
                         width: {
@@ -251,58 +263,48 @@
                 };
 
 
-                function tick() {
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                // Detect code function 
+                const detectCode = () => {
+                    if (alreadyDetected) return;
+                    // console.log(video)
+                    // Start detecting codes on to the video element
+                    barcodeDetector?.detect(video)?.then(codes => {
+                        // If no codes exit function
+                        if (codes.length === 0) return;
+                        alreadyDetected = true;
+                        for (const barcode of codes) {
+                            const url =
+                                `{{ route('items.search-by-barcode', ['code' => '___BARCODE___']) }}`
+                                .replace('___BARCODE___', barcode.rawValue);
+                            console.log('Searching for barcode:', url);
 
-                        javascriptBarcodeReader({
-                                image: imageData,
-                                barcode: 'code-128', // Ganti sesuai kebutuhan
-                                options: {
-                                    useWorker: false
-                                }
-                            })
-                            .then(code => {
-                                if (code && code !== lastScanned) {
-                                    lastScanned = code;
-                                    result.textContent = code;
-                                    console.log('Detected barcode:', code);
-
-                                    const url =
-                                        `{{ route('items.search-by-barcode', ['code' => '___BARCODE___']) }}`
-                                        .replace('___BARCODE___', code);
-                                    console.log('Searching for barcode:', url);
-
-                                    fetch(url, {
-                                            method: 'GET',
-                                            headers: {
-                                                'X-Requested-With': 'XMLHttpRequest'
-                                            }
-                                        })
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                window.location.href =
-                                                    `{{ url('items') }}/${data.item.id}/edit`;
-                                            } else {
-                                                alert('Item tidak ditemukan dengan barcode: ' + code);
-                                            }
-                                        })
-                                        .catch(err => {
-                                            console.error('Error searching item by barcode:', err);
-                                            alert('Terjadi kesalahan saat mencari item dengan barcode: ' +
-                                                code);
-                                        });
-                                }
-                            })
-                            .catch(err => {
-                                // Bisa log kalau mau debug: console.warn('No barcode detected in this frame.');
-                            });
-                    }
-                    requestAnimationFrame(tick);
+                            fetch(url, {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    }
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        window.location.href =
+                                            `{{ url('items') }}/${data.item.id}/edit`;
+                                    } else {
+                                        alert('Item tidak ditemukan dengan barcode: ' + code);
+                                    }
+                                    alreadyDetected = false;
+                                })
+                                .catch(err => {
+                                    alreadyDetected = false;
+                                    console.error('Error searching item by barcode:', err);
+                                    alert('Terjadi kesalahan saat mencari item dengan barcode: ' +
+                                        code);
+                                });
+                        }
+                    }).catch(err => {
+                        // Log an error if one happens
+                        console.error(err);
+                    })
                 }
 
 
@@ -311,11 +313,10 @@
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(stream => {
                             video.srcObject = stream;
-                            video.play();
-
-
-                            requestAnimationFrame(tick);
-
+                            video.onloadedmetadata = () => {
+                                video.play();
+                                intervalization = setInterval(detectCode, 100);
+                            };
                         })
                         .catch(err => {
                             console.error('Error accessing camera: ', err);
@@ -336,6 +337,9 @@
                         tracks.forEach(track => track.stop());
                     }
                     video.srcObject = null;
+
+                    // clear intervalization
+                    clearInterval(intervalization)
                 });
 
                 // Filter functionality

@@ -25,3 +25,5 @@ Thumbs.db
 
 
 /public/barcodes/*.png
+/public/qrcodes/*.svg
+/public/qrcodes/*.png
