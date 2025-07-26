@@ -8,6 +8,9 @@ namespace App\Models;
 
 use App\Models\Core\WithSearch;
 use Carbon\Carbon;
+use chillerlan\QRCode\Output\QRGdImagePNG;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -150,23 +153,32 @@ class Item extends Model
     public function getBarcodeUrlAttribute()
     {
         // Check folder existence
-        $barcodeDir = public_path('barcodes');
+        $barcodeDir = public_path('qrcodes');
         if (! file_exists($barcodeDir)) {
             mkdir($barcodeDir, 0755, true);
         }
 
         // Check if barcode file exists
-        $barcodePath = public_path('barcodes/' . $this->barcode . '.png');
-        if (file_exists($barcodePath)) {
-            return asset('barcodes/' . $this->barcode . '.png');
-        }
+        $barcodePath = public_path('qrcodes/' . $this->barcode . '.svg');
+        // if (file_exists($barcodePath)) {
+        //     return asset('qrcodes/' . $this->barcode . '.png');
+        // }
 
-        // Generate barcode if it doesn't exist
-        $barcodeGenerator = new \Picqer\Barcode\BarcodeGeneratorPNG;
-        $barcodeImage = $barcodeGenerator->getBarcode($this->barcode, $barcodeGenerator::TYPE_CODE_128);
-        file_put_contents($barcodePath, $barcodeImage);
+        // Generate qrcode if it doesn't exist
+        $options = new QROptions();
 
-        return asset('barcodes/' . $this->barcode . '.png');
+        $options->version             = 7;
+        $options->outputInterface     = QRGdImagePNG::class;
+        $options->scale               = 20;
+        $options->outputBase64        = false;
+        $options->bgColor             = [200, 150, 200];
+        $options->imageTransparent    = true;
+
+        $qrcode = (new QRCode($options))->render($this->barcode);
+        // dd($qrcode);
+        file_put_contents($barcodePath, $qrcode);
+
+        return asset('qrcodes/' . $this->barcode . '.svg');
     }
 
     public function decrementStock($amount)
