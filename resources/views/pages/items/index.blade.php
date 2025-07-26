@@ -228,20 +228,20 @@
 
     @push('js')
         <script src="//unpkg.com/javascript-barcode-reader"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
         <script>
+            let useNative = 'BarcodeDetector' in window;
+            let barcodeDetector;
+
+            if (useNative) {
+                barcodeDetector = new BarcodeDetector();
+            }
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
             const fps = 25;
             let intervalization;
             let alreadyDetected = false;
-            let formats = ['qr_code'];
-            // Save all formats to formats var 
-            // BarcodeDetector.getSupportedFormats().then(arr => formats = arr);
-            // Create new barcode detector with all supported formats
-            const barcodeDetector = new BarcodeDetector({
-                formats
-            });
 
             $(document).ready(function() {
                 // Initialize tooltips
@@ -262,49 +262,73 @@
                     }
                 };
 
+                const callback = (code) => {
+                    alreadyDetected = true;
+                    const url =
+                        `{{ route('items.search-by-barcode', ['code' => '___BARCODE___']) }}`
+                        .replace('___BARCODE___', code);
+                    console.log('Searching for barcode:', url);
+                    fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href =
+                                    `{{ url('items') }}/${data.item.id}/edit`;
+                            } else {
+                                alert('Item tidak ditemukan dengan barcode: ' + code);
+                            }
+                            alreadyDetected = false;
+                        })
+                        .catch(err => {
+                            alreadyDetected = false;
+                            console.error('Error searching item by barcode:', err);
+                            alert('Terjadi kesalahan saat mencari item dengan barcode: ' +
+                                code);
+                        });
+                };
+
 
                 // Detect code function 
                 const detectCode = () => {
-                    if (alreadyDetected) return;
                     // console.log(video)
                     // Start detecting codes on to the video element
-                    barcodeDetector?.detect(video)?.then(codes => {
-                        // If no codes exit function
-                        if (codes.length === 0) return;
-                        alreadyDetected = true;
-                        for (const barcode of codes) {
-                            const url =
-                                `{{ route('items.search-by-barcode', ['code' => '___BARCODE___']) }}`
-                                .replace('___BARCODE___', barcode.rawValue);
-                            console.log('Searching for barcode:', url);
+                    if (useNative) {
+                        barcodeDetector?.detect(video)?.then(codes => {
+                            // If no codes exit function
+                            if (codes.length === 0) return;
+                            const code = codes[0];
+                            if (alreadyDetected) return;
+                            callback(code.rawValue);
 
-                            fetch(url, {
-                                    method: 'GET',
-                                    headers: {
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    }
-                                })
-                                .then(res => res.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        window.location.href =
-                                            `{{ url('items') }}/${data.item.id}/edit`;
-                                    } else {
-                                        alert('Item tidak ditemukan dengan barcode: ' + code);
-                                    }
-                                    alreadyDetected = false;
-                                })
-                                .catch(err => {
-                                    alreadyDetected = false;
-                                    console.error('Error searching item by barcode:', err);
-                                    alert('Terjadi kesalahan saat mencari item dengan barcode: ' +
-                                        code);
-                                });
+                        }).catch(err => {
+                            // Log an error if one happens
+                            console.error(err);
+                        })
+                    } else {
+                        console.log('Using jsQR fallback');
+
+                        // fallback pakai canvas + jsQR
+                        const width = video.videoWidth;
+                        const height = video.videoHeight;
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(video, 0, 0, width, height);
+                        const imageData = ctx.getImageData(0, 0, width, height);
+                        const code = jsQR(imageData.data, width, height);
+
+                        if (code && code.data) {
+                            console.log('Detected code:', code.data);
+                            if (alreadyDetected) return;
+                            callback(code.data);
                         }
-                    }).catch(err => {
-                        // Log an error if one happens
-                        console.error(err);
-                    })
+
+                    }
                 }
 
 
@@ -315,7 +339,7 @@
                             video.srcObject = stream;
                             video.onloadedmetadata = () => {
                                 video.play();
-                                intervalization = setInterval(detectCode, 100);
+                                intervalization = setInterval(detectCode, 500);
                             };
                         })
                         .catch(err => {
