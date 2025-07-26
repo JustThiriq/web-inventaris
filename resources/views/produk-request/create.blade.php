@@ -117,7 +117,7 @@
                                         <td><input type="number" name="produk_requests[0][quantity]" class="form-control"
                                                 min="0" step="1" required></td>
                                         <!-- <td><input type="number" name="produk_requests[0][estimated_price]"
-                                                                                                                        class="form-control" min="0" step="0.01" required></td> -->
+                                                                                                                                                                    class="form-control" min="0" step="0.01" required></td> -->
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
                                                 <i class="fas fa-trash"></i>
@@ -168,6 +168,8 @@
             </div>
         </div>
     </div>
+
+    <canvas id="canvas" style="display: none;"></canvas>
 
 @endsection
 
@@ -220,9 +222,22 @@
             $('#selectProductModal').modal('hide');
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let useNative = false; //'BarcodeDetector' in window;
+        let barcodeDetector;
+        if (useNative) {
+            barcodeDetector = new BarcodeDetector();
+        } else {
+            console.log('Using jsQR fallback');
+        }
+        let alreadyDetected = false;
+        let intervalization = null;
         let rowIndex = 1;
         let scanTargetIndex = null;
+        const video = document.getElementById('barcode-video');
 
         function addRow() {
             const tbody = document.getElementById('table-body');
@@ -271,8 +286,69 @@
             startScan();
         });
 
+        const callback = (code) => {
+            $('#scanBarcodeModal').modal('hide');
+
+            fetch(`/items/search-by-barcode/${code}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Check if the item already exists in the table
+                        const existingRow = document.querySelector(
+                            `tr .item-id[value="${data.item.id}"]`
+                        );
+                        console.log(existingRow);
+                        if (existingRow) {
+                            alert('Item sudah ada di daftar produk!');
+                            return;
+                        }
+
+                        const row = document.querySelector(
+                            `tr[data-index="${scanTargetIndex}"]`);
+                        row.querySelector('.item-name').value = data.item.name;
+                        row.querySelector('.item-id').value = data.item.id;
+                    } else {
+                        alert('Item tidak ditemukan!');
+                    }
+                });
+        }
+
+        const detectCode = (stream) => {
+
+            if (useNative) {
+                barcodeDetector.detect(video).then(codes => {
+                    if (codes.length > 0) {
+                        const code = codes[0].rawValue;
+                        clearInterval(intervalization);
+                        stream.getTracks().forEach(t => t.stop());
+                        callback(code);
+                    }
+                });
+            } else {
+                console.log('Using jsQR fallback');
+                // fallback pakai canvas + jsQR
+                const width = video.videoWidth;
+                const height = video.videoHeight;
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(video, 0, 0, width, height);
+                const imageData = ctx.getImageData(0, 0, width, height);
+                const code = jsQR(imageData.data, width, height);
+
+                if (code && code.data) {
+                    console.log('Detected code:', code.data);
+                    if (alreadyDetected) return;
+
+                    clearInterval(intervalization);
+                    stream.getTracks().forEach(t => t.stop());
+                    callback(code.data);
+                }
+
+            }
+        }
+
         function startScan() {
-            const video = document.getElementById('barcode-video');
             navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'environment'
@@ -280,46 +356,12 @@
                 })
                 .then(stream => {
                     video.srcObject = stream;
-                    const detector = new BarcodeDetector();
-                    const interval = setInterval(() => {
-                        detector.detect(video).then(codes => {
-                            if (codes.length > 0) {
-                                const code = codes[0].rawValue;
-                                clearInterval(interval);
-                                stream.getTracks().forEach(t => t.stop());
-                                $('#scanBarcodeModal').modal('hide');
-
-                                fetch(`/items/search-by-barcode/${code}`)
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            // Check if the item already exists in the table
-                                            const existingRow = document.querySelector(
-                                                `tr .item-id[value="${data.item.id}"]`
-                                            );
-                                            console.log(existingRow);
-                                            if (existingRow) {
-                                                alert('Item sudah ada di daftar produk!');
-                                                return;
-                                            }
-
-                                            const row = document.querySelector(
-                                                `tr[data-index="${scanTargetIndex}"]`);
-                                            row.querySelector('.item-name').value = data.item.name;
-                                            row.querySelector('.item-id').value = data.item.id;
-                                        } else {
-                                            alert('Item tidak ditemukan!');
-                                        }
-                                    });
-                            }
-                        });
-                    }, 1000);
+                    intervalization = setInterval(() => detectCode(stream), 500);
                 })
                 .catch(err => alert('Tidak bisa akses kamera: ' + err));
         }
 
         $('#scanBarcodeModal').on('hidden.bs.modal', () => {
-            const video = document.getElementById('barcode-video');
             if (video.srcObject) {
                 video.srcObject.getTracks().forEach(track => track.stop());
                 video.srcObject = null;
