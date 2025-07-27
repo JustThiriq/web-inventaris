@@ -103,7 +103,7 @@
                                                     <input type="text" name="produk_requests[{{ $index }}][name]"
                                                         class="form-control item-name" placeholder="Scan barcode"
                                                         value="{{ $produk->item->code . ' - ' . $produk->item->name . ' - ' . $produk->item->category->name }}"
-                                                        readonly required>
+                                                        required>
                                                     <div class="input-group-append">
 
                                                         {{-- <button type="button" class="btn btn-secondary select-product"
