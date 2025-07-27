@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Riwayat Pemesanan')
+@section('title', 'Pemesanan')
 
 @section('content')
     <div class="container-fluid">
@@ -10,8 +10,11 @@
                     <div class="card-header">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <h4 class="card-title mb-0">
-                                <i class="fas fa-clipboard-list"></i> Riwayat Pemesanan
+                                <i class="fas fa-clipboard-list"></i> Daftar Pemesanan
                             </h4>
+                            <a href="{{ route('pemesanan.create') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Tambah Pemesanan
+                            </a>
                         </div>
                     </div>
 
@@ -137,8 +140,11 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Belum ada Riwayat Pemesanan</h5>
+                                <h5 class="text-muted">Belum ada Pemesanan</h5>
                                 <p class="text-muted">Silakan tambah Pemesanan pertama Anda.</p>
+                                <a href="{{ route('pemesanan.create') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Tambah Request
+                                </a>
                             </div>
                         @endif
                     </div>
