@@ -362,14 +362,14 @@ return [
             'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => ' Penerimaan Supplier',
+            'text' => ' Pemesanan / Penerimaan Supplier',
             'icon' => 'fas fa-clipboard-list',
             'url' => 'pemesanan',
             'label_color' => 'warning',
             'role' => ['admin', 'warehouse'], // Only visible to admin and warehouse roles
         ],
         [
-            'text' => ' History Penerimaan',
+            'text' => ' History Pemesanan / Penerimaan',
             'icon' => 'fas fa-clipboard-list',
             'url' => 'history/pemesanan',
             'label_color' => 'warning',
