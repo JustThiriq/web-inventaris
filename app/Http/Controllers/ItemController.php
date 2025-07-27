@@ -196,10 +196,10 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         // Check if item has related item_requests
-        if ($item->item_requests()->count() > 0) {
-            return redirect()->route('items.index')
-                ->with('error', 'Item tidak dapat dihapus karena masih memiliki request terkait.');
-        }
+        // if ($item->item_requests()->count() > 0) {
+        //     return redirect()->route('items.index')
+        //         ->with('error', 'Item tidak dapat dihapus karena masih memiliki request terkait.');
+        // }
 
         $item->delete();
 
