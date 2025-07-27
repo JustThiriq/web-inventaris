@@ -55,10 +55,10 @@
                                 </div>
 
                                 <!-- Right Column -->
-                                {{-- <div class="col-md-6">
+                                <div class="col-md-6">
 
                                     @include('pages.items.form.stock')
-                                </div> --}}
+                                </div>
                             </div>
 
                             <!-- Action Buttons -->

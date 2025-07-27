@@ -131,13 +131,25 @@ class ItemController extends Controller
             'warehouse_id' => 'nullable|exists:warehouses,id',
             'unit_id' => 'nullable|exists:units,id',
             'barcode' => 'nullable|string|max:255|unique:items,barcode',
-            // 'min_stock' => 'nullable|integer|min:0',
-            // 'current_stock' => 'nullable|integer|min:0',
+            'min_stock' => 'nullable|integer|min:0',
+            'current_stock' => 'nullable|integer|min:0',
         ]);
 
         // min_stock and current_stock can be set to 0 by default
-        $validated['min_stock'] = $validated['min_stock'] ?? 0;
-        $validated['current_stock'] = $validated['current_stock'] ?? 0;
+        if ($request->category_id) {
+            $category = Category::find($request->category_id);
+            if ($category && strtolower($category->name) !== 'consumable') {
+                $validated['min_stock'] = $validated['min_stock'] ?? 0;
+                $validated['current_stock'] = $validated['current_stock'] ?? 0;
+            } else {
+                // If category is consumable, set min_stock and current_stock to null
+                $validated['min_stock'] = 0;
+                $validated['current_stock'] = 0;
+            }
+        } else {
+            $validated['min_stock'] = $validated['min_stock'] ?? 0;
+            $validated['current_stock'] = $validated['current_stock'] ?? 0;
+        }
 
         Item::create($validated);
 
@@ -174,15 +186,31 @@ class ItemController extends Controller
     public function update(Request $request, Item $item)
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:items,code,'.$item->id,
+            'code' => 'required|string|max:255|unique:items,code,' . $item->id,
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'warehouse_id' => 'nullable|exists:warehouses,id',
             'unit_id' => 'nullable|exists:units,id',
-            'barcode' => 'nullable|string|max:255|unique:items,barcode,'.$item->id,
-            // 'min_stock' => 'nullable|integer|min:0',
-            // 'current_stock' => 'nullable|integer|min:0',
+            'barcode' => 'nullable|string|max:255|unique:items,barcode,' . $item->id,
+            'min_stock' => 'nullable|integer|min:0',
+            'current_stock' => 'nullable|integer|min:0',
         ]);
+
+        // min_stock and current_stock can be set to 0 by default
+        if ($request->category_id) {
+            $category = Category::find($request->category_id);
+            if ($category && strtolower($category->name) !== 'consumable') {
+                $validated['min_stock'] = $validated['min_stock'] ?? 0;
+                $validated['current_stock'] = $validated['current_stock'] ?? 0;
+            } else {
+                // If category is consumable, set min_stock and current_stock to null
+                $validated['min_stock'] = 0;
+                $validated['current_stock'] = 0;
+            }
+        } else {
+            $validated['min_stock'] = $validated['min_stock'] ?? 0;
+            $validated['current_stock'] = $validated['current_stock'] ?? 0;
+        }
 
         $item->update($validated);
 
