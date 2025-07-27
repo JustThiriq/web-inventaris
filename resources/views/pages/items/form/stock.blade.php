@@ -1,7 +1,6 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="card-title mb-0">Manajemen Stok</h5>
-        <span>Untuk barang non consumable otomatis akan menjadi 0</span>
     </div>
     <div class="card-body">
         @if (isset($item))
