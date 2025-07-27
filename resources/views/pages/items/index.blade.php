@@ -70,7 +70,7 @@
 
                         <!-- Items Table -->
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-hover">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th style="min-width: 10px">#</th>
@@ -86,7 +86,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($items as $item)
-                                        <tr class="{{ $item->current_stock <= $item->min_stock ? 'table-warning' : '' }}">
+                                        <tr>
                                             <td>{{ $loop->iteration + ($items->currentPage() - 1) * $items->perPage() }}
                                             </td>
                                             <td>
