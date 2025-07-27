@@ -12,9 +12,11 @@
                             <h4 class="card-title mb-0">
                                 <i class="fas fa-clipboard-list"></i> Daftar Produk Request
                             </h4>
-                            <a href="{{ route('produk-request.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Request
-                            </a>
+                            @if (auth()->user()->role()?->slug === 'user')
+                                <a href="{{ route('produk-request.create') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Tambah Request
+                                </a>
+                            @endif
                         </div>
                     </div>
 
@@ -165,9 +167,11 @@
                                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada produk request</h5>
                                 <p class="text-muted">Silakan tambah produk request pertama Anda.</p>
-                                <a href="{{ route('produk-request.create') }}" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> Tambah Request
-                                </a>
+                                @if (auth()->user()->role()?->slug === 'user')
+                                    <a href="{{ route('produk-request.create') }}" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Tambah Request
+                                    </a>
+                                @endif
                             </div>
                         @endif
                     </div>
