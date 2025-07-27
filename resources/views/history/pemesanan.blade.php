@@ -91,19 +91,6 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div class="btn-group" role="group">
-                                                        @if ($item->status === 'draft')
-                                                            <a href="{{ route('pemesanan.edit', $item) }}"
-                                                                class="btn btn-warning btn-sm" title="Edit">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
-                                                        @endif
-                                                        <button type="button" class="btn btn-secondary btn-sm"
-                                                            title="Update Status" data-toggle="modal"
-                                                            data-target="#statusModal{{ $item->id }}">
-                                                            <i class="fas fa-sync-alt"></i>
-                                                        </button>
-                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
